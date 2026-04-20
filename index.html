@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSPD — Secure Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1020; }
+
+/* ===== BOOT ===== */
+#boot {
+position: fixed; inset: 0; background: #050a0f; z-index: 1000;
+display: flex; flex-direction: column; justify-content: center; padding: 60px 80px;
+}
+.b-line { font-family: ‘Share Tech Mono’, monospace; font-size: 14px; color: #00ff88; line-height: 2.2; opacity: 0; }
+.b-line.show { opacity: 1; }
+.b-dim { color: #00cc66; } .b-warn { color: #ffcc00; } .b-white { color: #ffffff; font-size: 16px; }
+.b-bar-wrap { margin-top: 24px; opacity: 0; transition: opacity .4s; }
+.b-bar-wrap.show { opacity: 1; }
+.b-bar-lbl { font-family: ‘Share Tech Mono’, monospace; font-size: 12px; color: #00dd77; letter-spacing: 3px; margin-bottom: 8px; }
+.b-bar { width: 400px; height: 4px; background: #001a0d; border: 1px solid #005522; overflow: hidden; }
+.b-bar-fill { height: 100%; background: #00ff88; width: 0%; transition: width 2.2s ease; }
+
+/* ===== LOGIN ===== */
+#login {
+position: fixed; inset: 0; z-index: 900;
+display: flex; justify-content: center; align-items: center;
+opacity: 0; pointer-events: none; transition: opacity .6s;
+background: #0a1428;
+}
+#login.show { opacity: 1; pointer-events: all; }
+.lbox {
+width: 420px; background: #111e33; border: 2px solid #2255cc;
+padding: 48px; box-shadow: 0 0 40px #1133aa44;
+}
+.lbox-top { text-align: center; margin-bottom: 32px; }
+.lbox-badge svg { width: 60px; height: 60px; }
+.lbox-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 28px; color: #ffffff; letter-spacing: 5px; margin-top: 12px; }
+.lbox-sub { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #6688bb; letter-spacing: 3px; margin-top: 5px; }
+.lfield { margin-bottom: 16px; }
+.lfield label { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #7799cc; letter-spacing: 3px; display: block; margin-bottom: 7px; }
+.lfield input { width: 100%; background: #162030; border: 1px solid #2255cc; color: #ffffff; font-family: ‘Share Tech Mono’, monospace; font-size: 14px; padding: 12px 16px; outline: none; letter-spacing: 2px; }
+.lfield input:focus { border-color: #4488ff; background: #1a2a44; }
+.lbtn { width: 100%; margin-top: 22px; padding: 14px; background: #1a5fff; border: none; color: #ffffff; font-family: ‘Bebas Neue’, sans-serif; font-size: 18px; letter-spacing: 5px; cursor: pointer; }
+.lbtn:hover { background: #2a6fff; }
+.lstatus { margin-top: 14px; font-family: ‘Share Tech Mono’, monospace; font-size: 12px; color: #44ff99; text-align: center; letter-spacing: 2px; min-height: 20px; }
+.lfooter { margin-top: 24px; padding-top: 20px; border-top: 1px solid #1a2a44; font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #334466; letter-spacing: 2px; text-align: center; line-height: 2; }
+.cursor-blink { display: inline-block; width: 8px; height: 13px; background: #44ff99; animation: cblink .6s infinite; margin-left: 2px; vertical-align: middle; }
+@keyframes cblink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ===== DESKTOP ===== */
+#desktop {
+position: fixed; inset: 0; z-index: 800;
+opacity: 0; pointer-events: none; transition: opacity .8s;
+display: flex; flex-direction: column;
+}
+#desktop.show { opacity: 1; pointer-events: all; }
+
+/* WALLPAPER */
+.wallpaper {
+position: absolute; inset: 0;
+background: linear-gradient(160deg, #0d1a2e 0%, #091422 50%, #060e1a 100%);
+}
+.wp-grid {
+position: absolute; inset: 0;
+background-image: linear-gradient(#1a3366 1px, transparent 1px), linear-gradient(90deg, #1a3366 1px, transparent 1px);
+background-size: 60px 60px;
+opacity: 0.07;
+}
+.wp-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; pointer-events: none; }
+.wp-badge svg { width: 380px; height: 380px; }
+
+/* TOPBAR */
+.topbar {
+position: relative; z-index: 200; height: 32px;
+background: #070f1e; border-bottom: 1px solid #1e3a7a;
+display: flex; align-items: center; padding: 0 18px; gap: 20px; flex-shrink: 0;
+}
+.topbar-logo { font-family: ‘Bebas Neue’, sans-serif; font-size: 15px; color: #c9a84c; letter-spacing: 4px; display: flex; align-items: center; gap: 8px; }
+.topbar-center { flex: 1; display: flex; justify-content: center; }
+.topbar-date { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #4d6a99; letter-spacing: 2px; }
+.topbar-right { display: flex; align-items: center; gap: 14px; }
+.topbar-clock { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #aabbdd; letter-spacing: 2px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22dd66; display: inline-block; animation: sdot 2s infinite; }
+.status-txt { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #33bb66; letter-spacing: 2px; }
+@keyframes sdot { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+
+/* DESKTOP AREA */
+.desktop-area { position: relative; flex: 1; overflow: hidden; }
+
+/* ICONS */
+.desktop-icons { position: absolute; top: 24px; left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.desk-icon { width: 84px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px; border-radius: 6px; border: 1px solid transparent; }
+.desk-icon:hover { background: #162840; border-color: #2255aa; }
+.desk-icon.selected { background: #1a3050; border-color: #3366cc; }
+.desk-icon .di-img { width: 48px; height: 48px; }
+.desk-icon .di-img svg { width: 100%; height: 100%; }
+.desk-icon .di-label { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #ccdaee; letter-spacing: 1px; text-align: center; line-height: 1.4; }
+
+/* WINDOWS */
+.win {
+position: absolute; background: #0e1a2e; border: 1px solid #2244aa;
+box-shadow: 0 20px 60px #00000088; display: flex; flex-direction: column;
+min-width: 300px; min-height: 180px; opacity: 0; pointer-events: none; transition: opacity .2s; border-radius: 4px;
+}
+.win.open { opacity: 1; pointer-events: all; }
+.win-titlebar {
+height: 36px; background: #091420; border-bottom: 1px solid #1e3a7a;
+display: flex; align-items: center; padding: 0 14px; gap: 10px;
+cursor: move; flex-shrink: 0; border-radius: 4px 4px 0 0;
+}
+.win-dots { display: flex; gap: 7px; }
+.win-dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
+.win-dot.close { background: #ff5f57; }
+.win-dot.min { background: #febc2e; }
+.win-dot.max { background: #28c840; }
+.win-dot:hover { filter: brightness(1.2); }
+.win-title { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #5577aa; letter-spacing: 3px; flex: 1; text-align: center; }
+.win-body { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.win-body::-webkit-scrollbar { width: 4px; }
+.win-body::-webkit-scrollbar-track { background: #091420; }
+.win-body::-webkit-scrollbar-thumb { background: #2244aa; }
+.win-resize { position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; cursor: se-resize; }
+.win-resize::before { content: ‘’; position: absolute; bottom: 4px; right: 4px; width: 7px; height: 7px; border-right: 2px solid #3355aa; border-bottom: 2px solid #3355aa; }
+
+/* TASKBAR */
+.taskbar {
+position: relative; z-index: 200; height: 50px;
+background: #070f1e; border-top: 1px solid #1e3a7a;
+display: flex; align-items: center; padding: 0 12px; gap: 6px; flex-shrink: 0;
+}
+.tb-btn {
+height: 36px; padding: 0 16px; background: #111e33; border: 1px solid #1e3a7a;
+color: #6688bb; font-family: ‘Share Tech Mono’, monospace; font-size: 10px;
+letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+white-space: nowrap; border-radius: 3px; transition: all .2s;
+}
+.tb-btn:hover { background: #162840; color: #aaccff; border-color: #2255cc; }
+.tb-btn.active { background: #1a3050; border-color: #3366dd; color: #ffffff; }
+.tb-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.tb-spacer { flex: 1; }
+.tb-sys { display: flex; align-items: center; gap: 12px; font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4d6a99; letter-spacing: 2px; }
+
+/* ===== WINDOW CONTENT ===== */
+.win-pad { padding: 28px 32px; }
+
+.sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.sec-num { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4488ff; letter-spacing: 3px; }
+.sec-head h3 { font-family: ‘Bebas Neue’, sans-serif; font-size: 26px; color: #ffffff; letter-spacing: 2px; }
+.sec-head h3 span { color: #c9a84c; }
+.sec-divider { flex: 1; height: 1px; background: #1e3a7a; }
+
+/* APP HEADER */
+.app-hdr { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid #152030; }
+.app-hdr svg { width: 58px; height: 58px; flex-shrink: 0; }
+.app-hdr-text { flex: 1; }
+.app-eye { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4477cc; letter-spacing: 3px; margin-bottom: 6px; }
+.app-name { font-family: ‘Bebas Neue’, sans-serif; font-size: 42px; line-height: .95; color: #ffffff; }
+.app-name span { color: #c9a84c; }
+.app-pos { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; font-weight: 700; color: #7788aa; letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+.app-chips { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.chip { background: #111e33; border: 1px solid #1e3a7a; padding: 5px 13px; font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #6688bb; letter-spacing: 2px; white-space: nowrap; }
+
+/* STATS */
+.stats-g { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-bottom: 20px; background: #1e3a7a; border: 1px solid #1e3a7a; }
+.stat-c { background: #0e1a2e; padding: 16px; text-align: center; }
+.stat-n { font-family: ‘Bebas Neue’, sans-serif; font-size: 34px; color: #c9a84c; display: block; line-height: 1; }
+.stat-l { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #44669a; letter-spacing: 2px; margin-top: 4px; display: block; }
+
+/* INFO GRID */
+.info-g { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 20px; background: #1a3060; }
+.info-c { background: #0e1a2e; padding: 14px 18px; border-left: 3px solid #2244aa; }
+.info-c.gold { border-left-color: #c9a84c; }
+.info-c.full { grid-column: 1/-1; }
+.info-c .lbl { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #44669a; letter-spacing: 3px; margin-bottom: 4px; }
+.info-c .val { font-size: 16px; font-weight: 700; color: #ddeeff; font-family: ‘Rajdhani’, sans-serif; }
+.story { font-family: ‘Rajdhani’, sans-serif; font-size: 15px; line-height: 1.8; color: #aabbd0; margin-top: 6px; }
+.story strong { color: #f0c060; }
+
+/* TIMELINE */
+.tl { padding-left: 20px; border-left: 2px solid #1e3a7a; }
+.tl-i { position: relative; padding: 0 0 16px 22px; }
+.tl-i::before { content: ‘’; position: absolute; left: -6px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: #3366ff; border: 2px solid #0e1a2e; }
+.tl-d { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #4488ff; letter-spacing: 3px; margin-bottom: 2px; }
+.tl-r { font-family: ‘Rajdhani’, sans-serif; font-size: 16px; font-weight: 700; color: #eef3ff; }
+.tl-l { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4d6a88; margin-top: 1px; }
+
+/* MOTIVATION */
+.motiv { background: #0c1828; border: 1px solid #5a3a00; border-left: 4px solid #c9a84c; padding: 22px 26px; font-family: ‘Rajdhani’, sans-serif; font-size: 16px; line-height: 1.9; color: #ccdaee; }
+.motiv strong { color: #f0c060; }
+
+/* CONTACT */
+.contact-g { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: #1a3060; }
+.c-card { background: #0e1a2e; padding: 18px; cursor: pointer; border-bottom: 3px solid transparent; transition: all .2s; }
+.c-card:hover { background: #12203a; border-bottom-color: #3366ff; }
+.c-t { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #44669a; letter-spacing: 3px; margin-bottom: 6px; }
+.c-v { font-family: ‘Rajdhani’, sans-serif; font-size: 17px; font-weight: 700; color: #ddeeff; }
+.c-copy { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #4488ff; margin-top: 8px; opacity: 0; transition: opacity .2s; letter-spacing: 2px; }
+.c-card:hover .c-copy { opacity: 1; }
+
+/* RANKS */
+.rk-section { margin-bottom: 20px; }
+.rk-sec-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 17px; letter-spacing: 3px; padding: 8px 16px; margin-bottom: 2px; }
+.rk-sec-title.leit { background: #1e1400; color: #f0c060; border-left: 4px solid #c9a84c; }
+.rk-sec-title.mgmt { background: #0d1a33; color: #88aaff; border-left: 4px solid #4488ff; }
+.rk-sec-title.mid  { background: #0d1f0d; color: #88dd88; border-left: 4px solid #55cc55; }
+.rk-sec-title.low  { background: #141a22; color: #8899bb; border-left: 4px solid #445577; }
+.rk-row { display: flex; align-items: center; padding: 10px 16px; background: #0c1624; border-bottom: 1px solid #121e30; gap: 12px; transition: background .15s; }
+.rk-row:hover { background: #111e33; }
+.rk-num { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #1e3355; width: 22px; flex-shrink: 0; }
+.rk-name { font-family: ‘Rajdhani’, sans-serif; font-size: 16px; font-weight: 700; color: #ddeeff; flex: 1; }
+.rk-tag { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; padding: 3px 10px; letter-spacing: 2px; white-space: nowrap; border-radius: 2px; }
+.tag-leader { background: #2a1a00; color: #f0c060; border: 1px solid #886622; }
+.tag-co     { background: #1e1200; color: #cc9933; border: 1px solid #664411; }
+.tag-curator{ background: #0d1a44; color: #88aaff; border: 1px solid #2244aa; }
+.tag-unit   { background: #0a1633; color: #6699ee; border: 1px solid #1a3377; }
+.tag-ia     { background: #2a0a0a; color: #ff7777; border: 1px solid #882222; }
+.tag-honor  { background: #1e1800; color: #eebb44; border: 1px solid #776611; }
+.tag-special{ background: #1a0a2a; color: #cc88ff; border: 1px solid #663388; }
+.tag-media  { background: #2a1010; color: #ff9999; border: 1px solid #882233; }
+.tag-susp   { background: #2a0808; color: #ff5555; border: 1px solid #881111; }
+.tag-default{ background: #111a22; color: #8899bb; border: 1px solid #334455; }
+
+/* ABTEILUNGEN */
+.dept-g { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dept-card { background: #0c1828; border: 1px solid #1a3366; padding: 20px; position: relative; overflow: hidden; transition: border-color .2s; }
+.dept-card:hover { border-color: #2255cc; }
+.dept-card::before { content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.dept-card.le::before { background: #c9a84c; }
+.dept-card.pd::before { background: #2255ee; }
+.dept-card.ia::before { background: #dd2222; }
+.dept-card.socom::before { background: #8822ee; }
+.dept-card.db::before { background: #11aa66; }
+.dept-abbr { font-family: ‘Bebas Neue’, sans-serif; font-size: 34px; letter-spacing: 3px; line-height: 1; margin-bottom: 3px; }
+.dept-card.le .dept-abbr { color: #f0c060; }
+.dept-card.pd .dept-abbr { color: #6699ff; }
+.dept-card.ia .dept-abbr { color: #ff5555; }
+.dept-card.socom .dept-abbr { color: #cc77ff; }
+.dept-card.db .dept-abbr { color: #44ddaa; }
+.dept-fullname { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; letter-spacing: 3px; margin-bottom: 12px; }
+.dept-card.le .dept-fullname { color: #886622; }
+.dept-card.pd .dept-fullname { color: #334488; }
+.dept-card.ia .dept-fullname { color: #882222; }
+.dept-card.socom .dept-fullname { color: #662288; }
+.dept-card.db .dept-fullname { color: #226644; }
+.dept-desc { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; line-height: 1.7; color: #8899bb; }
+
+/* KONZEPT */
+.kz-full { background: #0c1828; border: 1px solid #5a3a00; padding: 22px 26px; margin-bottom: 16px; }
+.kz-full .kt { font-family: ‘Bebas Neue’, sans-serif; font-size: 20px; color: #f0c060; letter-spacing: 3px; margin-bottom: 14px; }
+.kz-full p { font-family: ‘Rajdhani’, sans-serif; font-size: 15px; line-height: 1.9; color: #aabbd0; margin-bottom: 12px; }
+.kz-full p strong { color: #f0c060; }
+.req-g { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: #1a3060; margin-bottom: 16px; }
+.req-c { background: #0c1828; padding: 16px; text-align: center; }
+.req-n { font-family: ‘Bebas Neue’, sans-serif; font-size: 30px; color: #4488ff; display: block; }
+.req-l { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #44669a; letter-spacing: 2px; margin-top: 4px; display: block; }
+.kz-g { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.kz-card { background: #0c1828; border: 1px solid #1a3366; border-left: 4px solid #3366ff; padding: 18px 20px; }
+.kz-card.gold { border-left-color: #c9a84c; }
+.kz-card.red  { border-left-color: #dd3333; }
+.kz-card.green{ border-left-color: #33cc66; }
+.kz-card .kt2 { font-family: ‘Bebas Neue’, sans-serif; font-size: 17px; letter-spacing: 2px; color: #ddeeff; margin-bottom: 12px; }
+.kz-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.kz-card ul li { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; color: #8899bb; padding-left: 14px; position: relative; line-height: 1.5; }
+.kz-card ul li::before { content: ‘▸’; position: absolute; left: 0; color: #4488ff; font-size: 11px; }
+.kz-card.gold ul li::before { color: #c9a84c; }
+.kz-card.red  ul li::before { color: #dd5555; }
+.kz-card.green ul li::before { color: #44cc77; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%) translateY(50px); background: #1a5fff; color: #fff; padding: 10px 24px; font-family: ‘Share Tech Mono’, monospace; font-size: 11px; letter-spacing: 2px; transition: transform .35s; z-index: 99999; pointer-events: none; border-radius: 3px; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* CTX MENU */
+.ctx-menu { position: fixed; background: #0e1a2e; border: 1px solid #2244aa; min-width: 160px; z-index: 5000; display: none; box-shadow: 0 8px 32px #00000088; }
+.ctx-menu.open { display: block; }
+.ctx-item { padding: 10px 16px; font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #7799cc; letter-spacing: 2px; cursor: pointer; }
+.ctx-item:hover { background: #162840; color: #ffffff; }
+.ctx-sep { height: 1px; background: #1a3366; margin: 3px 0; }
+</style>
+
+</head>
+<body>
+
+<!-- BOOT -->
+
+<div id="boot">
+  <div id="blines"></div>
+  <div class="b-bar-wrap" id="bbar">
+    <div class="b-bar-lbl">LOADING LSPD OS v4.2.1</div>
+    <div class="b-bar"><div class="b-bar-fill" id="bfill"></div></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+
+<div id="login">
+  <div class="lbox">
+    <div class="lbox-top">
+      <div class="lbox-badge">
+        <svg viewBox="0 0 60 60" fill="none">
+          <polygon points="30,4 38,14 51,12 54,25 63,31 58,44 61,57 48,60 40,70 30,64 20,70 12,60 -1,57 2,44 -3,31 6,25 9,12 22,14" fill="none" stroke="#3366ff" stroke-width="1.8" transform="translate(0,-3)"/>
+          <circle cx="30" cy="28" r="13" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+          <text x="30" y="33" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="10" fill="#c9a84c" letter-spacing="1">LSPD</text>
+        </svg>
+      </div>
+      <div class="lbox-title">LSPD TERMINAL OS</div>
+      <div class="lbox-sub">MAJESTIC ROLEPLAY DE · SECURE ACCESS</div>
+    </div>
+    <div class="lfield"><label>BENUTZERNAME</label><input type="text" id="lu" value="E.LaBalotelli" readonly></div>
+    <div class="lfield"><label>PASSWORT</label><input type="password" id="lp"><span class="cursor-blink" id="lcursor" style="display:none;"></span></div>
+    <button class="lbtn">ANMELDEN</button>
+    <div class="lstatus" id="lstatus"></div>
+    <div class="lfooter">LOS SANTOS POLICE DEPARTMENT<br>UNBEFUGTER ZUGRIFF WIRD STRAFRECHTLICH VERFOLGT</div>
+  </div>
+</div>
+
+<!-- DESKTOP -->
+
+<div id="desktop">
+  <div class="wallpaper">
+    <div class="wp-grid"></div>
+    <div class="wp-badge">
+      <svg viewBox="0 0 380 380" fill="none">
+        <polygon points="190,16 234,70 308,59 330,133 396,183 366,257 386,331 313,352 260,418 190,386 120,418 67,352 -6,331 14,257 -16,183 50,133 72,59 146,70" fill="none" stroke="#2255aa" stroke-width="1"/>
+        <circle cx="190" cy="190" r="75" fill="none" stroke="#c9a84c" stroke-width="0.8"/>
+        <text x="190" y="204" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="42" fill="#c9a84c" letter-spacing="3">LSPD</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#c9a84c" stroke-width="1.2"/><text x="10" y="14" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="7" fill="#c9a84c">LS</text></svg>
+      LSPD OS
+    </div>
+    <div class="topbar-center"><div class="topbar-date" id="topdate"></div></div>
+    <div class="topbar-right">
+      <span class="status-dot"></span><span class="status-txt">ONLINE</span>
+      <div class="topbar-clock" id="topclock"></div>
+    </div>
+  </div>
+
+  <!-- DESKTOP AREA -->
+
+  <div class="desktop-area" id="desktopArea" oncontextmenu="showCtx(event)">
+
+```
+<!-- ICONS -->
+<div class="desktop-icons">
+  <div class="desk-icon" id="icon-bewerbung" ondblclick="openWin('bewerbung')" onclick="selectIcon('bewerbung')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <rect x="8" y="5" width="32" height="38" rx="2" fill="#111e33" stroke="#3366ff" stroke-width="1.8"/>
+      <line x1="14" y1="15" x2="34" y2="15" stroke="#c9a84c" stroke-width="1.8"/>
+      <line x1="14" y1="22" x2="34" y2="22" stroke="#2244aa" stroke-width="1.2"/>
+      <line x1="14" y1="29" x2="26" y2="29" stroke="#2244aa" stroke-width="1.2"/>
+      <circle cx="24" cy="10" r="4" fill="none" stroke="#c9a84c" stroke-width="1.3"/>
+    </svg></div>
+    <div class="di-label">Bewerbung</div>
+  </div>
+  <div class="desk-icon" id="icon-rangsystem" ondblclick="openWin('rangsystem')" onclick="selectIcon('rangsystem')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <rect x="4" y="33" width="11" height="11" rx="1" fill="#1e1400" stroke="#c9a84c" stroke-width="1.8"/>
+      <rect x="18" y="23" width="11" height="21" rx="1" fill="#0d1a33" stroke="#3366ff" stroke-width="1.8"/>
+      <rect x="32" y="13" width="11" height="31" rx="1" fill="#0a2218" stroke="#33aa66" stroke-width="1.8"/>
+      <polyline points="9,33 23,23 37,13" stroke="#3366ff" stroke-width="1.5" fill="none"/>
+    </svg></div>
+    <div class="di-label">Rangsystem</div>
+  </div>
+  <div class="desk-icon" id="icon-abteilungen" ondblclick="openWin('abteilungen')" onclick="selectIcon('abteilungen')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <rect x="4" y="4" width="18" height="18" rx="2" fill="#2a0a0a" stroke="#ff5555" stroke-width="1.8"/>
+      <rect x="26" y="4" width="18" height="18" rx="2" fill="#1a0a2a" stroke="#cc77ff" stroke-width="1.8"/>
+      <rect x="4" y="26" width="18" height="18" rx="2" fill="#0a1a30" stroke="#3366ff" stroke-width="1.8"/>
+      <rect x="26" y="26" width="18" height="18" rx="2" fill="#0a2218" stroke="#44dd99" stroke-width="1.8"/>
+    </svg></div>
+    <div class="di-label">Abteilungen</div>
+  </div>
+  <div class="desk-icon" id="icon-konzept" ondblclick="openWin('konzept')" onclick="selectIcon('konzept')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="#2244aa" stroke-width="1.8"/>
+      <circle cx="24" cy="24" r="10" fill="none" stroke="#c9a84c" stroke-width="1.8"/>
+      <line x1="24" y1="4" x2="24" y2="14" stroke="#3366ff" stroke-width="1.8"/>
+      <line x1="24" y1="34" x2="24" y2="44" stroke="#3366ff" stroke-width="1.8"/>
+      <line x1="4" y1="24" x2="14" y2="24" stroke="#3366ff" stroke-width="1.8"/>
+      <line x1="34" y1="24" x2="44" y2="24" stroke="#3366ff" stroke-width="1.8"/>
+      <circle cx="24" cy="24" r="4" fill="#c9a84c"/>
+    </svg></div>
+    <div class="di-label">Konzept</div>
+  </div>
+</div>
+
+<!-- WIN: BEWERBUNG -->
+<div class="win" id="win-bewerbung" style="width:760px;height:560px;top:50px;left:150px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-bewerbung')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('bewerbung')"></div><div class="win-dot min" onclick="minWin('bewerbung')"></div><div class="win-dot max" onclick="maxWin('bewerbung')"></div></div>
+    <div class="win-title">BEWERBUNG — ENZO LABALOTELLI</div>
+    <div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div class="app-hdr">
+      <svg viewBox="0 0 58 58" fill="none">
+        <polygon points="29,3 37,13 50,11 53,24 62,29 57,42 60,55 47,58 39,68 29,62 19,68 11,58 -2,55 1,42 -4,29 5,24 8,11 21,13" fill="none" stroke="#3366ff" stroke-width="1.5" transform="translate(0,-2)"/>
+        <circle cx="29" cy="27" r="13" fill="none" stroke="#c9a84c" stroke-width="1.3"/>
+        <text x="29" y="31" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="9" fill="#c9a84c" letter-spacing="1">LSPD</text>
+      </svg>
+      <div class="app-hdr-text">
+        <div class="app-eye">LOS SANTOS POLICE DEPARTMENT — MAJESTIC ROLEPLAY DE</div>
+        <div class="app-name">Enzo <span>LaBalotelli</span></div>
+        <div class="app-pos">Bewerbung · Chief of Police</div>
+      </div>
+      <div class="app-chips"><div class="chip">ID #10386</div><div class="chip">SEIT 04.02.2023</div><div class="chip">19.04.2026</div></div>
+    </div>
+    <div class="stats-g">
+      <div class="stat-c"><span class="stat-n">3+</span><span class="stat-l">JAHRE AKTIV</span></div>
+      <div class="stat-c"><span class="stat-n">11</span><span class="stat-l">POSITIONEN</span></div>
+      <div class="stat-c"><span class="stat-n">5</span><span class="stat-l">BEHÖRDEN</span></div>
+      <div class="stat-c"><span class="stat-n">1</span><span class="stat-l">ZIEL</span></div>
+    </div>
+    <div class="info-g">
+      <div class="info-c"><div class="lbl">CHARAKTERNAME</div><div class="val">Enzo LaBalotelli</div></div>
+      <div class="info-c"><div class="lbl">SPIELER-ID</div><div class="val">#10386</div></div>
+      <div class="info-c"><div class="lbl">POSITION</div><div class="val">Chief of Police — LSPD</div></div>
+      <div class="info-c gold"><div class="lbl">DATUM</div><div class="val">19.04.2026</div></div>
+      <div class="info-c full"><div class="lbl">MEINE GESCHICHTE</div>
+        <p class="story">Meine Reise begann am <strong>04. Februar 2023</strong> als James Johnson. Nach einer Pause kehrte ich als <strong>Enzo LaBalotelli</strong> zurück – unter <strong>Tom SaintLaurents</strong> Leaderschaft beim LSPD, wo ich mich zum <strong>Assistant Chief des SWAT Teams</strong> hocharbeitete.</p>
+      </div>
+    </div>
+    <div class="sec-head"><span class="sec-num">// 01</span><h3>Bisherige <span>Laufbahn</span></h3><div class="sec-divider"></div></div>
+    <div class="tl">
+      <div class="tl-i"><div class="tl-d">LSPD</div><div class="tl-r">SWAT Commander</div><div class="tl-l">T. SaintLaurent</div></div>
+      <div class="tl-i"><div class="tl-d">LSPD</div><div class="tl-r">IAD Deputy Commander</div><div class="tl-l">L. Adams</div></div>
+      <div class="tl-i"><div class="tl-d">LSPD</div><div class="tl-r">I.H.T Officer</div><div class="tl-l">A. Lorek</div></div>
+      <div class="tl-i"><div class="tl-d">LSCSD</div><div class="tl-r">IAD Division Chief</div><div class="tl-l">F. Khalifa</div></div>
+      <div class="tl-i"><div class="tl-d">LSCSD</div><div class="tl-r">IAD Assistant Sheriff</div><div class="tl-l">M. Khalifa</div></div>
+      <div class="tl-i"><div class="tl-d">FIB</div><div class="tl-r">Corruption Office Agent</div><div class="tl-l">A. Crawford</div></div>
+      <div class="tl-i"><div class="tl-d">GOV</div><div class="tl-r">Department Admin der USS</div><div class="tl-l">Y. Muto</div></div>
+      <div class="tl-i"><div class="tl-d">GOV</div><div class="tl-r">Special Ops Agent</div><div class="tl-l">L. Walker</div></div>
+      <div class="tl-i"><div class="tl-d">GOV</div><div class="tl-r">Pflichtverteidiger</div><div class="tl-l">Unbekannt</div></div>
+      <div class="tl-i"><div class="tl-d">SANG</div><div class="tl-r">AirForce Unit Leiter</div><div class="tl-l">D. Mabehir</div></div>
+      <div class="tl-i"><div class="tl-d">WN</div><div class="tl-r">Reporter</div><div class="tl-l">T. Donnerfaust</div></div>
+      <div class="tl-i"><div class="tl-d">FREIBERUFLICH</div><div class="tl-r">Freier Anwalt</div><div class="tl-l">Unabhängig</div></div>
+    </div>
+    <div class="sec-head" style="margin-top:22px;"><span class="sec-num">// 02</span><h3>Meine <span>Motivation</span></h3><div class="sec-divider"></div></div>
+    <div class="motiv">Das LSPD ist das <strong>Herzstück des staatlichen Lebens</strong>. Als Chief möchte ich eine Behörde führen, die <strong>proaktiv, strukturiert und fair</strong> agiert. <strong>Majestic verdient ein LSPD, das eine Benchmark setzt.</strong></div>
+    <div class="sec-head" style="margin-top:22px;"><span class="sec-num">// 03</span><h3>Direkte <span>Erreichbarkeit</span></h3><div class="sec-divider"></div></div>
+    <div class="contact-g">
+      <div class="c-card" onclick="copyText('Goatonelli','Discord kopiert!')"><div class="c-t">DISCORD</div><div class="c-v">Goatonelli</div><div class="c-copy">▸ KOPIEREN</div></div>
+      <div class="c-card" onclick="copyText('10386','ID kopiert!')"><div class="c-t">SPIELER-ID</div><div class="c-v">#10386</div><div class="c-copy">▸ KOPIEREN</div></div>
+      <div class="c-card" onclick="copyText('Enzo LaBalotelli','Name kopiert!')"><div class="c-t">CHARAKTER</div><div class="c-v">Enzo LaBalotelli</div><div class="c-copy">▸ KOPIEREN</div></div>
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-bewerbung')"></div>
+</div>
+
+<!-- WIN: RANGSYSTEM -->
+<div class="win" id="win-rangsystem" style="width:580px;height:540px;top:70px;left:200px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-rangsystem')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('rangsystem')"></div><div class="win-dot min" onclick="minWin('rangsystem')"></div><div class="win-dot max" onclick="maxWin('rangsystem')"></div></div>
+    <div class="win-title">RANGSYSTEM — LSPD</div><div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div class="sec-head"><span class="sec-num">// RS</span><h3>Rang<span>system</span></h3><div class="sec-divider"></div></div>
+    <div class="rk-section">
+      <div class="rk-sec-title leit">⬡ LEITUNGSEBENE</div>
+      <div class="rk-row"><span class="rk-num">01</span><span class="rk-name">Chief of Police</span><span class="rk-tag tag-leader">LEADER</span></div>
+      <div class="rk-row"><span class="rk-num">02</span><span class="rk-name">Assistant Chief of Police</span><span class="rk-tag tag-co">CO-LEADER</span></div>
+      <div class="rk-row"><span class="rk-num">03</span><span class="rk-name">Division Commander</span><span class="rk-tag tag-curator">UNIT CURATOR</span></div>
+    </div>
+    <div class="rk-section">
+      <div class="rk-sec-title mgmt">⬡ MANAGEMENT</div>
+      <div class="rk-row"><span class="rk-num">04</span><span class="rk-name">Supervisor</span><span class="rk-tag tag-unit">UNIT LEADER</span></div>
+      <div class="rk-row"><span class="rk-num">05</span><span class="rk-name">Deputy Supervisor</span><span class="rk-tag tag-unit">UNIT CO-LEADER</span></div>
+      <div class="rk-row"><span class="rk-num">06</span><span class="rk-name">Administrative Officer</span><span class="rk-tag tag-ia">IA MITGLIED</span></div>
+      <div class="rk-row"><span class="rk-num">07</span><span class="rk-name">Superintendent</span><span class="rk-tag tag-unit">MANAGEMENT</span></div>
+    </div>
+    <div class="rk-section">
+      <div class="rk-sec-title mid">⬡ MIDDLE BRACKET</div>
+      <div class="rk-row"><span class="rk-num">08</span><span class="rk-name">Officer of Honor</span><span class="rk-tag tag-honor">EHRENRANG</span></div>
+      <div class="rk-row"><span class="rk-num">09</span><span class="rk-name">Captain</span><span class="rk-tag tag-default">PATROL DIVISION</span></div>
+      <div class="rk-row"><span class="rk-num">10</span><span class="rk-name">Detective</span><span class="rk-tag tag-special">DB MITGLIED</span></div>
+      <div class="rk-row"><span class="rk-num">11</span><span class="rk-name">Special Operations Officer</span><span class="rk-tag tag-special">SOCOM MITGLIED</span></div>
+      <div class="rk-row"><span class="rk-num">12</span><span class="rk-name">Lieutenant</span><span class="rk-tag tag-default">PATROL</span></div>
+      <div class="rk-row"><span class="rk-num">13</span><span class="rk-name">Sergeant</span><span class="rk-tag tag-default">PATROL</span></div>
+      <div class="rk-row"><span class="rk-num">14</span><span class="rk-name">Administrative Trainee</span><span class="rk-tag tag-ia">ADMIN TRAINEE</span></div>
+      <div class="rk-row"><span class="rk-num">15</span><span class="rk-name">Unit Candidate</span><span class="rk-tag tag-unit">UNIT TRAINEE</span></div>
+    </div>
+    <div class="rk-section">
+      <div class="rk-sec-title low">⬡ LOWER BRACKET</div>
+      <div class="rk-row"><span class="rk-num">16</span><span class="rk-name">Officer of Media</span><span class="rk-tag tag-media">MEDIA</span></div>
+      <div class="rk-row"><span class="rk-num">17</span><span class="rk-name">Officer</span><span class="rk-tag tag-default">PATROL</span></div>
+      <div class="rk-row"><span class="rk-num">18</span><span class="rk-name">Junior Officer</span><span class="rk-tag tag-default">PATROL</span></div>
+      <div class="rk-row"><span class="rk-num">19</span><span class="rk-name">Rookie</span><span class="rk-tag tag-default">NEUER OFFICER</span></div>
+      <div class="rk-row"><span class="rk-num">—</span><span class="rk-name">Suspended</span><span class="rk-tag tag-susp">ZWANGSBEURLAUBT</span></div>
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-rangsystem')"></div>
+</div>
+
+<!-- WIN: ABTEILUNGEN -->
+<div class="win" id="win-abteilungen" style="width:660px;height:520px;top:80px;left:220px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-abteilungen')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('abteilungen')"></div><div class="win-dot min" onclick="minWin('abteilungen')"></div><div class="win-dot max" onclick="maxWin('abteilungen')"></div></div>
+    <div class="win-title">ABTEILUNGEN — LSPD</div><div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div class="sec-head"><span class="sec-num">// AB</span><h3>Abtei<span>lungen</span></h3><div class="sec-divider"></div></div>
+    <div class="dept-g">
+      <div class="dept-card le"><div class="dept-abbr">LE</div><div class="dept-fullname">LEITUNGSEBENE</div><div class="dept-desc">Die Leitungsebene setzt sich aus Personen zusammen, welche den Rang Division Commander begleiten. Ein reibungsloser Ablauf aller Units wird garantiert.</div></div>
+      <div class="dept-card pd"><div class="dept-abbr">PD</div><div class="dept-fullname">PATROL DIVISION</div><div class="dept-desc">Die Patrol Division ist das Grundfundament des LSPDs. Jeder neue Officer beginnt hier seine Reise und kann sich bis an die Spitze arbeiten.</div></div>
+      <div class="dept-card ia"><div class="dept-abbr">IA</div><div class="dept-fullname">INTERNAL ADMINISTRATION</div><div class="dept-desc">Die interne Personalabteilung – zuständig für Einstellungen, Kündigungen und Sanktionen. Dein Ansprechpartner für alles rund ums Personal.</div></div>
+      <div class="dept-card socom"><div class="dept-abbr">SOCOM</div><div class="dept-fullname">SPECIAL OPERATIONS COMMAND</div><div class="dept-desc">Die Spezialeinheit des LSPDs – zuständig für Hochrisiko-Einsätze wie Bankraube, Geiselnahmen und koordinierte Operationen.</div></div>
+      <div class="dept-card db" style="grid-column:1/-1;"><div class="dept-abbr">DB</div><div class="dept-fullname">DETECTIVE BUREAU</div><div class="dept-desc">Das Detective Bureau führt verdeckten Zivildienst durch, gewinnt Informationen über illegale Gruppierungen und koordiniert Operationen gegen kriminelle Fraktionen.</div></div>
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-abteilungen')"></div>
+</div>
+
+<!-- WIN: KONZEPT -->
+<div class="win" id="win-konzept" style="width:680px;height:560px;top:60px;left:190px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-konzept')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('konzept')"></div><div class="win-dot min" onclick="minWin('konzept')"></div><div class="win-dot max" onclick="maxWin('konzept')"></div></div>
+    <div class="win-title">KONZEPT & VISION — LSPD</div><div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div class="sec-head"><span class="sec-num">// KZ</span><h3>Konzept <span>& Vision</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-full">
+      <div class="kt">VISION DES CHIEF OF POLICE</div>
+      <p>Das LSPD unter meiner Führung steht für <strong>Ordnung, Integrität und Effizienz</strong>. Jeder Officer weiß, was erwartet wird – <strong>Leistung wird belohnt, Fehlverhalten konsequent geahndet</strong>.</p>
+      <p>Ich bringe Erfahrung aus den unterschiedlichsten staatlichen Einrichtungen mit. <strong>Das LSPD wird unter meiner Leitung eine Benchmark setzen.</strong></p>
+    </div>
+    <div class="req-g">
+      <div class="req-c"><span class="req-n">72H</span><span class="req-l">AKTIVITÄT / WOCHE</span></div>
+      <div class="req-c"><span class="req-n">0</span><span class="req-l">TOLERANZ BEI KORRUPTION</span></div>
+      <div class="req-c"><span class="req-n">14T</span><span class="req-l">PROBEZEIT ROOKIES</span></div>
+    </div>
+    <div class="kz-g">
+      <div class="kz-card"><div class="kt2">⚖ KERNWERTE</div><ul>
+        <li>Integrität in jedem Einsatz</li><li>Transparenz gegenüber Führung</li>
+        <li>Respekt gegenüber allen</li><li>Teamarbeit vor Einzelleistung</li>
+        <li>Konsequenz bei Regelverstößen</li>
+      </ul></div>
+      <div class="kz-card gold"><div class="kt2">★ BEWERBUNGSVORAUSSETZUNGEN</div><ul>
+        <li>Mindestalter 16 Jahre (OOC)</li><li>Keine aktiven Sanktionen</li>
+        <li>Grundkenntnisse Serverregeln</li><li>Mikrofonpflicht im Dienst</li>
+        <li>Vorstellungsgespräch mit IA</li>
+      </ul></div>
+      <div class="kz-card red"><div class="kt2">⚠ SANKTIONEN</div><ul>
+        <li>Korruption → sofortige Entlassung</li><li>Waffenmissbrauch → Suspension</li>
+        <li>Inaktivität 7+ Tage → Rang-Down</li><li>Respektlosigkeit → Verwarnung</li>
+        <li>Info-Leak → Entlassung</li>
+      </ul></div>
+      <div class="kz-card green"><div class="kt2">↑ AUFSTIEGSSYSTEM</div><ul>
+        <li>Beförderungen durch die IA</li><li>Leistung & Aktivität bewertet</li>
+        <li>Unit-Aufnahme per Bewerbung</li><li>Ehrenrang nur per Nominierung</li>
+        <li>Management per Ausschreibung</li>
+      </ul></div>
+    </div>
+    <div class="kz-full" style="margin-top:0;">
+      <div class="kt">LEITBILD</div>
+      <p><strong>„Wir schützen. Wir dienen. Wir führen."</strong><br>Das LSPD ist mehr als eine Fraktion – es ist eine Institution. Jeder Officer trägt diese Verantwortung vom ersten Tag als Rookie. Wir handeln nach Recht und Gesetz.</p>
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-konzept')"></div>
+</div>
+```
+
+  </div><!-- desktop-area -->
+
+  <!-- TASKBAR -->
+
+  <div class="taskbar">
+    <button class="tb-btn" id="tb-bewerbung" onclick="toggleWin('bewerbung')">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1" stroke="currentColor" stroke-width="1.1"/><line x1="4" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1"/><line x1="4" y1="7.5" x2="10" y2="7.5" stroke="currentColor" stroke-width=".9"/></svg>
+      BEWERBUNG
+    </button>
+    <button class="tb-btn" id="tb-rangsystem" onclick="toggleWin('rangsystem')">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="9" width="3.5" height="4" stroke="currentColor" stroke-width="1"/><rect x="5.5" y="6" width="3.5" height="7" stroke="currentColor" stroke-width="1"/><rect x="10" y="3" width="3.5" height="10" stroke="currentColor" stroke-width="1"/></svg>
+      RANGSYSTEM
+    </button>
+    <button class="tb-btn" id="tb-abteilungen" onclick="toggleWin('abteilungen')">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="8" y="1" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="1" y="8" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="8" y="8" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/></svg>
+      ABTEILUNGEN
+    </button>
+    <button class="tb-btn" id="tb-konzept" onclick="toggleWin('konzept')">
+      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1"/></svg>
+      KONZEPT
+    </button>
+    <div class="tb-spacer"></div>
+    <div class="tb-sys">
+      <span class="status-dot"></span>
+      <span>E.LABALOTELLI</span>
+      <span style="color:#1a2a44;">|</span>
+      <span id="tbclock"></span>
+    </div>
+  </div>
+</div>
+
+<!-- CTX MENU -->
+
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-item" onclick="openAllWins()">Alle Fenster öffnen</div>
+  <div class="ctx-item" onclick="closeAllWins()">Alle Fenster schließen</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="openWin('bewerbung')">Bewerbung</div>
+  <div class="ctx-item" onclick="openWin('rangsystem')">Rangsystem</div>
+  <div class="ctx-item" onclick="openWin('abteilungen')">Abteilungen</div>
+  <div class="ctx-item" onclick="openWin('konzept')">Konzept</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// BOOT
+const bootSeq=[
+  {t:'LSPD TERMINAL OS v4.2.1',c:'b-white',d:150},
+  {t:'Copyright © 2026 Los Santos Police Department',c:'b-dim',d:300},
+  {t:'',c:'',d:450},
+  {t:'Initializing secure boot sequence...',c:'',d:600},
+  {t:'[OK] Loading kernel modules',c:'b-dim',d:800},
+  {t:'[OK] Mounting encrypted filesystem',c:'b-dim',d:1000},
+  {t:'[OK] Connecting to LSPD mainframe',c:'b-dim',d:1200},
+  {t:'[OK] Decrypting personnel database',c:'b-dim',d:1400},
+  {t:'[WARN] Last login: 18.04.2026 — terminal-4',c:'b-warn',d:1700},
+  {t:'[OK] All systems operational',c:'b-dim',d:2000},
+  {t:'Launching LSPD OS...',c:'',d:2300},
+];
+const bl=document.getElementById('blines');
+bootSeq.forEach(({t,c,d})=>{
+  setTimeout(()=>{
+    const el=document.createElement('div');
+    el.className='b-line show '+(c||'');
+    el.textContent=t||'\u00a0';
+    bl.appendChild(el);
+  },d);
+});
+setTimeout(()=>{
+  document.getElementById('bbar').classList.add('show');
+  setTimeout(()=>{document.getElementById('bfill').style.width='100%';},100);
+},2500);
+setTimeout(()=>{
+  const boot=document.getElementById('boot');
+  boot.style.transition='opacity .5s';boot.style.opacity='0';
+  setTimeout(()=>{
+    boot.style.display='none';
+    document.getElementById('login').classList.add('show');
+    setTimeout(startAutoType,700);
+  },500);
+},4500);
+
+// AUTO-TYPE
+const PW='lspd2026';
+function startAutoType(){
+  const inp=document.getElementById('lp');
+  const cur=document.getElementById('lcursor');
+  cur.style.display='inline-block';
+  let i=0;
+  const iv=setInterval(()=>{
+    inp.value+=PW[i++];
+    if(i>=PW.length){
+      clearInterval(iv);cur.style.display='none';
+      setTimeout(()=>{
+        document.getElementById('lstatus').textContent='▸ AUTHENTIFIZIERUNG LÄUFT...';
+        setTimeout(doLogin,900);
+      },400);
+    }
+  },120);
+}
+function doLogin(){
+  document.getElementById('lstatus').textContent='✓ ZUGRIFF GEWÄHRT — WILLKOMMEN, E.LABALOTELLI';
+  setTimeout(()=>{
+    const login=document.getElementById('login');
+    login.style.transition='opacity .6s';login.style.opacity='0';
+    setTimeout(()=>{login.style.display='none';document.getElementById('desktop').classList.add('show');},600);
+  },800);
+}
+
+// WINDOWS
+const winState={bewerbung:false,rangsystem:false,abteilungen:false,konzept:false};
+let topZ=10;
+function openWin(n){const w=document.getElementById('win-'+n);w.classList.add('open');winState[n]=true;bringToFront(n);document.getElementById('tb-'+n).classList.add('active');closeCtx();}
+function closeWin(n){document.getElementById('win-'+n).classList.remove('open');winState[n]=false;document.getElementById('tb-'+n).classList.remove('active');}
+function minWin(n){closeWin(n);}
+function maxWin(n){
+  const w=document.getElementById('win-'+n);const a=document.getElementById('desktopArea');
+  if(w.dataset.maxed==='1'){w.style.cssText=w.dataset.prev;w.dataset.maxed='0';}
+  else{w.dataset.prev=w.style.cssText;w.style.left='0';w.style.top='0';w.style.width=a.offsetWidth+'px';w.style.height=a.offsetHeight+'px';w.dataset.maxed='1';}
+}
+function toggleWin(n){winState[n]?closeWin(n):openWin(n);}
+function bringToFront(n){document.getElementById('win-'+n).style.zIndex=++topZ;}
+function openAllWins(){['bewerbung','rangsystem','abteilungen','konzept'].forEach((n,i)=>setTimeout(()=>openWin(n),i*70));}
+function closeAllWins(){['bewerbung','rangsystem','abteilungen','konzept'].forEach(n=>closeWin(n));}
+['bewerbung','rangsystem','abteilungen','konzept'].forEach(n=>{document.getElementById('win-'+n).addEventListener('mousedown',()=>bringToFront(n));});
+
+// DRAG
+function startDrag(e,id){
+  if(e.target.classList.contains('win-dot'))return;
+  const w=document.getElementById(id);bringToFront(id.replace('win-',''));
+  const sx=e.clientX-w.offsetLeft,sy=e.clientY-w.offsetTop;
+  const mm=ev=>{w.style.left=(ev.clientX-sx)+'px';w.style.top=Math.max(0,ev.clientY-sy)+'px';};
+  const mu=()=>{document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};
+  document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);
+}
+// RESIZE
+function startResize(e,id){
+  e.stopPropagation();const w=document.getElementById(id);
+  const sx=e.clientX,sy=e.clientY,sw=w.offsetWidth,sh=w.offsetHeight;
+  const mm=ev=>{w.style.width=Math.max(300,sw+ev.clientX-sx)+'px';w.style.height=Math.max(200,sh+ev.clientY-sy)+'px';};
+  const mu=()=>{document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};
+  document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);
+}
+// ICONS
+function selectIcon(n){document.querySelectorAll('.desk-icon').forEach(i=>i.classList.remove('selected'));document.getElementById('icon-'+n).classList.add('selected');}
+document.getElementById('desktopArea').addEventListener('click',e=>{if(!e.target.closest('.desk-icon'))document.querySelectorAll('.desk-icon').forEach(i=>i.classList.remove('selected'));});
+// CTX
+function showCtx(e){if(e.target.closest('.win')||e.target.closest('.taskbar')||e.target.closest('.desk-icon'))return;e.preventDefault();const m=document.getElementById('ctxMenu');m.style.left=e.clientX+'px';m.style.top=e.clientY+'px';m.classList.add('open');}
+function closeCtx(){document.getElementById('ctxMenu').classList.remove('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.ctx-menu'))closeCtx();});
+// COPY
+function copyText(t,m){navigator.clipboard.writeText(t).then(()=>{const toast=document.getElementById('toast');toast.textContent='✓ '+m;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2000);});}
+// CLOCK
+function tick(){
+  const n=new Date(),pad=x=>String(x).padStart(2,'0');
+  const str=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  document.getElementById('topclock').textContent=str;
+  document.getElementById('tbclock').textContent=str;
+  const days=['SO','MO','DI','MI','DO','FR','SA'];
+  const months=['JAN','FEB','MRZ','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
+  document.getElementById('topdate').textContent=days[n.getDay()]+', '+n.getDate()+'. '+months[n.getMonth()]+' '+n.getFullYear();
+}
+tick();setInterval(tick,1000);
+</script>
+
+</body>
+</html>
