@@ -7,8 +7,14 @@
 <title>LSPD — Secure Terminal</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1020; }
+/* Re-enable vertical scrollbar only for win-body */
+.win-body { scrollbar-width: thin; scrollbar-color: #1a3060 #091420; }
+.win-body::-webkit-scrollbar { display: block; width: 4px; }
+.win-body::-webkit-scrollbar-track { background: #091420; }
+.win-body::-webkit-scrollbar-thumb { background: #1a3060; border-radius: 2px; }
 
 /* ===== BOOT ===== */
 #boot {
@@ -23,6 +29,7 @@ display: flex; flex-direction: column; justify-content: center; padding: 60px 80
 .b-bar-lbl { font-family: ‘Share Tech Mono’, monospace; font-size: 12px; color: #00dd77; letter-spacing: 3px; margin-bottom: 8px; }
 .b-bar { width: 400px; height: 4px; background: #001a0d; border: 1px solid #005522; overflow: hidden; }
 .b-bar-fill { height: 100%; background: #00ff88; width: 0%; transition: width 2.2s ease; }
+#boot { overflow: hidden; }
 
 /* ===== LOGIN ===== */
 #login {
@@ -77,13 +84,13 @@ opacity: 0.07;
 .topbar {
 position: relative; z-index: 200; height: 32px;
 background: #070f1e; border-bottom: 1px solid #1e3a7a;
-display: flex; align-items: center; padding: 0 18px; gap: 20px; flex-shrink: 0;
+display: flex; align-items: center; padding: 0 18px; gap: 16px; flex-shrink: 0;
 }
-.topbar-logo { font-family: ‘Bebas Neue’, sans-serif; font-size: 15px; color: #c9a84c; letter-spacing: 4px; display: flex; align-items: center; gap: 8px; }
-.topbar-center { flex: 1; display: flex; justify-content: center; }
-.topbar-date { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #4d6a99; letter-spacing: 2px; }
-.topbar-right { display: flex; align-items: center; gap: 14px; }
-.topbar-clock { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #aabbdd; letter-spacing: 2px; }
+.topbar-logo { font-family: ‘Bebas Neue’, sans-serif; font-size: 15px; color: #c9a84c; letter-spacing: 3px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.topbar-center { flex: 1; display: flex; justify-content: center; overflow: hidden; }
+.topbar-date { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4d6a99; letter-spacing: 1px; white-space: nowrap; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.topbar-clock { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #aabbdd; letter-spacing: 1px; white-space: nowrap; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22dd66; display: inline-block; animation: sdot 2s infinite; }
 .status-txt { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #33bb66; letter-spacing: 2px; }
 @keyframes sdot { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
@@ -122,9 +129,11 @@ cursor: move; flex-shrink: 0; border-radius: 4px 4px 0 0;
 .win-body { flex: 1; overflow-y: auto; overflow-x: hidden; }
 .win-body::-webkit-scrollbar { width: 4px; }
 .win-body::-webkit-scrollbar-track { background: #091420; }
-.win-body::-webkit-scrollbar-thumb { background: #2244aa; }
+.win-body::-webkit-scrollbar-thumb { background: #1a3060; border-radius: 2px; }
 .win-resize { position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; cursor: se-resize; }
 .win-resize::before { content: ‘’; position: absolute; bottom: 4px; right: 4px; width: 7px; height: 7px; border-right: 2px solid #3355aa; border-bottom: 2px solid #3355aa; }
+/* Hide boot bar after boot */
+#boot { overflow: hidden; }
 
 /* TASKBAR */
 .taskbar {
@@ -396,9 +405,11 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
   <div class="topbar">
     <div class="topbar-logo">
       <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#c9a84c" stroke-width="1.2"/><text x="10" y="14" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="7" fill="#c9a84c">LS</text></svg>
-      LSPD OS
+      LSPD&nbsp;OS
     </div>
+    <div style="width:1px;height:16px;background:#1a3366;flex-shrink:0;"></div>
     <div class="topbar-center"><div class="topbar-date" id="topdate"></div></div>
+    <div style="width:1px;height:16px;background:#1a3366;flex-shrink:0;"></div>
     <div class="topbar-right">
       <span class="status-dot"></span><span class="status-txt">ONLINE</span>
       <div class="topbar-clock" id="topclock"></div>
@@ -566,11 +577,11 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
       <div class="rk-sec-title mgmt">⬡ MANAGEMENT</div>
       <div class="rk-row"><span class="rk-num">04</span><span class="rk-name">Supervisor</span><span class="rk-tag tag-unit">UNIT LEADER</span></div>
       <div class="rk-row"><span class="rk-num">05</span><span class="rk-name">Deputy Supervisor</span><span class="rk-tag tag-unit">UNIT CO-LEADER</span></div>
-      <div class="rk-row"><span class="rk-num">06</span><span class="rk-name">Administrative Officer</span><span class="rk-tag tag-ia">IA MITGLIED</span></div>
-      <div class="rk-row"><span class="rk-num">07</span><span class="rk-name">Superintendent</span><span class="rk-tag tag-unit">MANAGEMENT</span></div>
+      <div class="rk-row"><span class="rk-num">06</span><span class="rk-name">Superintendent</span><span class="rk-tag tag-unit">MANAGEMENT</span></div>
     </div>
     <div class="rk-section">
       <div class="rk-sec-title mid">⬡ MIDDLE BRACKET</div>
+      <div class="rk-row"><span class="rk-num">07</span><span class="rk-name">Administrative Officer</span><span class="rk-tag tag-ia">IA MITGLIED</span></div>
       <div class="rk-row"><span class="rk-num">08</span><span class="rk-name">Officer of Honor</span><span class="rk-tag tag-honor">EHRENRANG</span></div>
       <div class="rk-row"><span class="rk-num">09</span><span class="rk-name">Captain</span><span class="rk-tag tag-default">PATROL DIVISION</span></div>
       <div class="rk-row"><span class="rk-num">10</span><span class="rk-name">Detective</span><span class="rk-tag tag-special">DB MITGLIED</span></div>
@@ -630,7 +641,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
     <div class="kz-g" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px;">
       <div class="kz-req-chip">
         <div class="kzc-icon">⚖</div>
-        <div class="kzc-title">16 JAHRE</div>
+        <div class="kzc-title">18 JAHRE</div>
         <div class="kzc-sub">Mindestalter (OOC)</div>
       </div>
       <div class="kz-req-chip">
@@ -734,26 +745,42 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
     <!-- LEITUNGSEBENE -->
     <div class="org-level">
       <div class="org-level-label leit">LEITUNGSEBENE</div>
+      <!-- Chief -->
       <div class="org-row" style="justify-content:center;">
         <div class="org-node chief">
           <div class="org-rank">Chief of Police</div>
           <div class="org-tag">LEADER</div>
-          <div class="org-name" id="org-cop">— vakant —</div>
+          <div class="org-name">Enzo LaBalotelli</div>
         </div>
       </div>
       <div class="org-connector-down"></div>
-      <div class="org-row" style="justify-content:center;">
-        <div class="org-node co">
-          <div class="org-rank">Assistant Chief of Police</div>
-          <div class="org-tag">CO-LEADER</div>
+      <!-- 3 Assistant Chiefs -->
+      <div style="display:flex;justify-content:center;gap:12px;">
+        <div class="org-node co"><div class="org-rank">Assistant Chief of Police</div><div class="org-tag">CO-LEADER</div><div class="org-name">— vakant —</div></div>
+        <div class="org-node co"><div class="org-rank">Assistant Chief of Police</div><div class="org-tag">CO-LEADER</div><div class="org-name">— vakant —</div></div>
+        <div class="org-node co"><div class="org-rank">Assistant Chief of Police</div><div class="org-tag">CO-LEADER</div><div class="org-name">— vakant —</div></div>
+      </div>
+      <div class="org-connector-down"></div>
+      <!-- Division Commanders per Unit -->
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+        <div class="org-node curator" style="min-width:130px;">
+          <div class="org-rank" style="font-size:11px;">Div. Commander</div>
+          <div class="org-tag" style="font-size:8px;color:#ff7777;border-color:#882222;">IA</div>
           <div class="org-name">— vakant —</div>
         </div>
-      </div>
-      <div class="org-connector-down"></div>
-      <div class="org-row" style="justify-content:center;">
-        <div class="org-node curator">
-          <div class="org-rank">Division Commander</div>
-          <div class="org-tag">UNIT CURATOR</div>
+        <div class="org-node curator" style="min-width:130px;">
+          <div class="org-rank" style="font-size:11px;">Div. Commander</div>
+          <div class="org-tag" style="font-size:8px;color:#6699ff;border-color:#2244aa;">PD</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node curator" style="min-width:130px;">
+          <div class="org-rank" style="font-size:11px;">Div. Commander</div>
+          <div class="org-tag" style="font-size:8px;color:#cc77ff;border-color:#663388;">SOCOM</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node curator" style="min-width:130px;">
+          <div class="org-rank" style="font-size:11px;">Div. Commander</div>
+          <div class="org-tag" style="font-size:8px;color:#44ddaa;border-color:#226644;">DB</div>
           <div class="org-name">— vakant —</div>
         </div>
       </div>
@@ -851,7 +878,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
       <div class="akte-stamp stamp-green">✓ STRAFFREI</div>
       <div class="akte-stamp stamp-blue">✓ MILITÄR ZERT.</div>
       <div class="akte-stamp stamp-blue">✓ ÄRZ. GUTACHTEN</div>
-      <div class="akte-stamp stamp-gold">16+ JAHRE</div>
+      <div class="akte-stamp stamp-gold">18+ JAHRE</div>
     </div>
 
     <!-- NOTIZEN -->
@@ -927,6 +954,8 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
   <div class="ctx-item" onclick="openWin('rangsystem')">Rangsystem</div>
   <div class="ctx-item" onclick="openWin('abteilungen')">Abteilungen</div>
   <div class="ctx-item" onclick="openWin('konzept')">Konzept</div>
+  <div class="ctx-item" onclick="openWin('organigramm')">Organigramm</div>
+  <div class="ctx-item" onclick="openWin('akte')">Personalakte</div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -967,7 +996,6 @@ setTimeout(()=>{
     setTimeout(startAutoType,700);
   },500);
 },4500);
-
 // AUTO-TYPE
 const PW='lspd2026';
 function startAutoType(){
@@ -1032,21 +1060,67 @@ function startResize(e,id){
 // ICONS
 function selectIcon(n){document.querySelectorAll('.desk-icon').forEach(i=>i.classList.remove('selected'));document.getElementById('icon-'+n).classList.add('selected');}
 document.getElementById('desktopArea').addEventListener('click',e=>{if(!e.target.closest('.desk-icon'))document.querySelectorAll('.desk-icon').forEach(i=>i.classList.remove('selected'));});
+
+// FOTO UPLOAD
+function loadFoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=document.getElementById('akte-foto');
+    img.src=ev.target.result;img.style.display='block';
+    document.getElementById('akte-foto-box').style.border='2px solid #c9a84c';
+  };
+  reader.readAsDataURL(file);
+}
+
+// SOUND — Polizei Funk Rauschen
+let _ac=null,_gain=null,_src=null,_on=false;
+function toggleSound(){
+  const btn=document.getElementById('sound-btn');
+  if(_on){
+    _gain.gain.linearRampToValueAtTime(0,_ac.currentTime+0.4);
+    setTimeout(()=>{try{_src.stop();}catch(e){}; _on=false;btn.classList.remove('sound-on');},450);
+    return;
+  }
+  try{
+    _ac=new(window.AudioContext||window.webkitAudioContext)();
+    if(_ac.state==='suspended'){_ac.resume();}
+    // Create stereo noise buffer
+    const dur=4, sr=_ac.sampleRate;
+    const buf=_ac.createBuffer(1,sr*dur,sr);
+    const ch=buf.getChannelData(0);
+    for(let i=0;i<ch.length;i++) ch[i]=(Math.random()*2-1);
+    // Chain: noise → highpass → bandpass → gain → out
+    _src=_ac.createBufferSource();
+    _src.buffer=buf; _src.loop=true;
+    const hp=_ac.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=300;
+    const bp=_ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1000; bp.Q.value=2;
+    _gain=_ac.createGain(); _gain.gain.value=0;
+    _src.connect(hp); hp.connect(bp); bp.connect(_gain); _gain.connect(_ac.destination);
+    _src.start(0);
+    _gain.gain.linearRampToValueAtTime(0.4,_ac.currentTime+0.6);
+    _on=true; btn.classList.add('sound-on');
+  } catch(err){
+    const t=document.getElementById('toast');
+    t.textContent='⚠ Sound: Klick zuerst irgendwo auf die Seite';
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);
+  }
+}
 // CTX
 function showCtx(e){if(e.target.closest('.win')||e.target.closest('.taskbar')||e.target.closest('.desk-icon'))return;e.preventDefault();const m=document.getElementById('ctxMenu');m.style.left=e.clientX+'px';m.style.top=e.clientY+'px';m.classList.add('open');}
 function closeCtx(){document.getElementById('ctxMenu').classList.remove('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.ctx-menu'))closeCtx();});
 // COPY
 function copyText(t,m){navigator.clipboard.writeText(t).then(()=>{const toast=document.getElementById('toast');toast.textContent='✓ '+m;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2000);});}
-// CLOCK
+// CLOCK — deutsche Zeit (Europe/Berlin)
 function tick(){
-  const n=new Date(),pad=x=>String(x).padStart(2,'0');
-  const str=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
-  document.getElementById('topclock').textContent=str;
-  document.getElementById('tbclock').textContent=str;
-  const days=['SO','MO','DI','MI','DO','FR','SA'];
-  const months=['JAN','FEB','MRZ','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
-  document.getElementById('topdate').textContent=days[n.getDay()]+', '+n.getDate()+'. '+months[n.getMonth()]+' '+n.getFullYear();
+  const now = new Date();
+  const de = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+  document.getElementById('topclock').textContent=de;
+  document.getElementById('tbclock').textContent=de;
+  const dateParts = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',day:'numeric',month:'short',year:'numeric'}).formatToParts(now);
+  const map={};dateParts.forEach(p=>{map[p.type]=p.value;});
+  document.getElementById('topdate').textContent=(map.weekday||'').toUpperCase()+', '+map.day+'. '+(map.month||'').toUpperCase()+' '+map.year;
 }
 tick();setInterval(tick,1000);
 </script>
