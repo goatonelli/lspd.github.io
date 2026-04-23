@@ -270,6 +270,65 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
 .kz-card.red  ul li::before { color: #dd5555; }
 .kz-card.green ul li::before { color: #44cc77; }
 
+/* ORGANIGRAMM */
+.org-level { margin-bottom: 8px; }
+.org-level-label { font-family: ‘Bebas Neue’, sans-serif; font-size: 13px; letter-spacing: 3px; padding: 5px 12px; margin-bottom: 10px; text-align: center; }
+.org-level-label.leit { background: #1e1400; color: #f0c060; border: 1px solid #664400; }
+.org-level-label.mgmt { background: #0d1a33; color: #88aaff; border: 1px solid #2244aa; }
+.org-level-label.mid  { background: #0d1f0d; color: #88dd88; border: 1px solid #336633; }
+.org-row { display: flex; justify-content: center; gap: 12px; }
+.org-node { background: #0c1828; border: 1px solid #1a3366; padding: 10px 14px; min-width: 140px; text-align: center; }
+.org-node.chief { border-color: #c9a84c; background: #12180a; min-width: 200px; }
+.org-node.co { border-color: #886622; background: #12180a; min-width: 200px; }
+.org-node.curator { border-color: #2244aa; min-width: 200px; }
+.org-node.mgmt-node { min-width: 160px; }
+.org-node.dept-node { min-width: 120px; }
+.org-rank { font-family: ‘Rajdhani’, sans-serif; font-size: 13px; font-weight: 700; color: #ddeeff; margin-bottom: 3px; }
+.org-node.chief .org-rank { color: #f0c060; font-size: 14px; }
+.org-node.co .org-rank { color: #cc9933; }
+.org-tag { font-family: ‘Share Tech Mono’, monospace; font-size: 8px; color: #c9a84c; border: 1px solid #664400; padding: 2px 7px; letter-spacing: 2px; display: inline-block; margin-bottom: 5px; }
+.org-node.curator .org-tag { color: #88aaff; border-color: #2244aa; }
+.org-name { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #334466; letter-spacing: 1px; margin-top: 4px; }
+.org-connector-down { width: 1px; height: 14px; background: #1a3366; margin: 0 auto; }
+.org-connector-h3 { height: 1px; background: #1a3366; margin: 0 20px 10px; }
+
+/* AKTE */
+.akte-grid { display: flex; flex-direction: column; gap: 4px; }
+.akte-row { display: flex; gap: 12px; align-items: center; }
+.akte-lbl { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #334466; letter-spacing: 2px; width: 100px; flex-shrink: 0; }
+.akte-val { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; font-weight: 700; color: #aabbd0; }
+.akte-stamp { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 12px; border-radius: 2px; }
+.stamp-green { background: #0a2210; color: #44dd77; border: 1px solid #226633; }
+.stamp-blue  { background: #0a1430; color: #4488ff; border: 1px solid #1a3377; }
+.stamp-gold  { background: #1a1400; color: #c9a84c; border: 1px solid #664400; }
+.akte-notiz { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; color: #8899bb; padding: 5px 0; border-bottom: 1px solid #0f1e30; line-height: 1.5; }
+.akte-notiz:last-child { border-bottom: none; }
+
+/* SOUND BTN ACTIVE */
+.tb-btn.sound-on { border-color: #22dd66; color: #22dd66; background: #0a2210; }
+
+/* KONZEPT EXTRAS */
+.kz-req-chip { background: #0c1828; border: 1px solid #1a3366; padding: 16px 12px; text-align: center; }
+.kzc-icon { font-size: 22px; margin-bottom: 6px; }
+.kzc-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 14px; color: #ddeeff; letter-spacing: 2px; margin-bottom: 4px; }
+.kzc-sub { font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #44669a; letter-spacing: 1px; }
+
+.kz-aufstieg { background: #0c1828; border: 1px solid #1a3366; padding: 20px 22px; margin-bottom: 0; }
+.auf-intro { font-family: ‘Rajdhani’, sans-serif; font-size: 15px; color: #aabbd0; line-height: 1.7; margin-bottom: 12px; }
+.auf-intro strong { color: #f0c060; }
+.auf-rule { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4488ff; background: #091420; border: 1px solid #1e3a7a; padding: 10px 14px; letter-spacing: 1px; line-height: 1.8; margin-bottom: 16px; }
+.auf-rule strong { color: #ffffff; }
+.auf-steps { display: flex; flex-direction: column; gap: 0; }
+.auf-step { display: flex; align-items: flex-start; gap: 14px; padding: 10px 12px; background: #091420; border: 1px solid #1a3366; }
+.auf-step-captain { border-color: #c9a84c; background: #12180a; }
+.auf-badge { font-family: ‘Bebas Neue’, sans-serif; font-size: 16px; color: #4488ff; background: #0d1e35; border: 1px solid #2244aa; padding: 4px 10px; letter-spacing: 2px; white-space: nowrap; min-width: 52px; text-align: center; }
+.auf-cap { color: #c9a84c; background: #1e1400; border-color: #664400; }
+.auf-name { font-family: ‘Rajdhani’, sans-serif; font-size: 15px; font-weight: 700; color: #ddeeff; margin-bottom: 2px; }
+.auf-content { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4d6a88; letter-spacing: 1px; line-height: 1.6; }
+.auf-arrow { text-align: center; color: #1e3a7a; font-size: 14px; padding: 2px 0; }
+
+.kz-abschluss { border-color: #c9a84c; }
+
 /* TOAST */
 .toast { position: fixed; bottom: 62px; left: 50%; transform: translateX(-50%) translateY(50px); background: #1a5fff; color: #fff; padding: 10px 24px; font-family: ‘Share Tech Mono’, monospace; font-size: 11px; letter-spacing: 2px; transition: transform .35s; z-index: 99999; pointer-events: none; border-radius: 3px; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -392,6 +451,37 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
       <circle cx="24" cy="24" r="4" fill="#c9a84c"/>
     </svg></div>
     <div class="di-label">Konzept</div>
+  </div>
+  <div class="desk-icon" id="icon-organigramm" ondblclick="openWin('organigramm')" onclick="selectIcon('organigramm')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <rect x="17" y="3" width="14" height="9" rx="1" fill="#1a2a00" stroke="#c9a84c" stroke-width="1.8"/>
+      <rect x="3" y="20" width="13" height="9" rx="1" fill="#0d1e35" stroke="#3366ff" stroke-width="1.5"/>
+      <rect x="18" y="20" width="13" height="9" rx="1" fill="#0d1e35" stroke="#3366ff" stroke-width="1.5"/>
+      <rect x="33" y="20" width="13" height="9" rx="1" fill="#0d1e35" stroke="#3366ff" stroke-width="1.5"/>
+      <rect x="3" y="37" width="13" height="8" rx="1" fill="#091420" stroke="#2244aa" stroke-width="1.2"/>
+      <rect x="33" y="37" width="13" height="8" rx="1" fill="#091420" stroke="#2244aa" stroke-width="1.2"/>
+      <line x1="24" y1="12" x2="24" y2="16" stroke="#c9a84c" stroke-width="1.5"/>
+      <line x1="9" y1="16" x2="39" y2="16" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="9" y1="16" x2="9" y2="20" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="24" y1="16" x2="24" y2="20" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="39" y1="16" x2="39" y2="20" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="9" y1="29" x2="9" y2="37" stroke="#2244aa" stroke-width="1.2"/>
+      <line x1="39" y1="29" x2="39" y2="37" stroke="#2244aa" stroke-width="1.2"/>
+    </svg></div>
+    <div class="di-label">Organigramm</div>
+  </div>
+  <div class="desk-icon" id="icon-akte" ondblclick="openWin('akte')" onclick="selectIcon('akte')">
+    <div class="di-img"><svg viewBox="0 0 48 48" fill="none">
+      <rect x="6" y="4" width="36" height="40" rx="2" fill="#1a1000" stroke="#c9a84c" stroke-width="1.8"/>
+      <rect x="12" y="10" width="12" height="14" rx="1" fill="#0d1e35" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="27" y1="13" x2="36" y2="13" stroke="#3366ff" stroke-width="1.2"/>
+      <line x1="27" y1="17" x2="36" y2="17" stroke="#2244aa" stroke-width="1"/>
+      <line x1="27" y1="21" x2="34" y2="21" stroke="#2244aa" stroke-width="1"/>
+      <line x1="12" y1="30" x2="36" y2="30" stroke="#1a3366" stroke-width="1"/>
+      <line x1="12" y1="35" x2="30" y2="35" stroke="#1a3366" stroke-width="1"/>
+      <rect x="6" y="4" width="36" height="4" rx="2" fill="#c9a84c"/>
+    </svg></div>
+    <div class="di-label">Akte</div>
   </div>
 </div>
 
@@ -522,51 +612,265 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
 </div>
 
 <!-- WIN: KONZEPT -->
-<div class="win" id="win-konzept" style="width:680px;height:560px;top:60px;left:190px;">
+<div class="win" id="win-konzept" style="width:720px;height:600px;top:60px;left:190px;">
   <div class="win-titlebar" onmousedown="startDrag(event,'win-konzept')">
     <div class="win-dots"><div class="win-dot close" onclick="closeWin('konzept')"></div><div class="win-dot min" onclick="minWin('konzept')"></div><div class="win-dot max" onclick="maxWin('konzept')"></div></div>
     <div class="win-title">KONZEPT & VISION — LSPD</div><div style="width:46px;"></div>
   </div>
   <div class="win-body"><div class="win-pad">
-    <div class="sec-head"><span class="sec-num">// KZ</span><h3>Konzept <span>& Vision</span></h3><div class="sec-divider"></div></div>
+
+    <!-- VISION -->
+    <div class="sec-head"><span class="sec-num">// 01</span><h3>Vision des <span>Chief</span></h3><div class="sec-divider"></div></div>
     <div class="kz-full">
-      <div class="kt">VISION DES CHIEF OF POLICE</div>
-      <p>Das LSPD unter meiner Führung steht für <strong>Ordnung, Integrität und Effizienz</strong>. Jeder Officer weiß, was erwartet wird – <strong>Leistung wird belohnt, Fehlverhalten konsequent geahndet</strong>.</p>
-      <p>Ich bringe Erfahrung aus den unterschiedlichsten staatlichen Einrichtungen mit. <strong>Das LSPD wird unter meiner Leitung eine Benchmark setzen.</strong></p>
+      <p>Das LSPD unter meiner Führung steht für <strong>Ordnung, Integrität und Effizienz</strong>. Ich bringe Erfahrung aus den unterschiedlichsten staatlichen Einrichtungen mit – vom SWAT über das FIB bis zur Justiz. Dieses Wissen fließt direkt in meine Führung ein. <strong>Das LSPD wird unter meiner Leitung eine Benchmark setzen</strong> – für alle staatlichen Fraktionen auf Majestic Roleplay.</p>
     </div>
-    <div class="req-g">
-      <div class="req-c"><span class="req-n">72H</span><span class="req-l">AKTIVITÄT / WOCHE</span></div>
-      <div class="req-c"><span class="req-n">0</span><span class="req-l">TOLERANZ BEI KORRUPTION</span></div>
-      <div class="req-c"><span class="req-n">14T</span><span class="req-l">PROBEZEIT ROOKIES</span></div>
+
+    <!-- BEWERBUNGSVORAUSSETZUNGEN -->
+    <div class="sec-head" style="margin-top:22px;"><span class="sec-num">// 02</span><h3>Bewerbungs<span>voraussetzungen</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-g" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px;">
+      <div class="kz-req-chip">
+        <div class="kzc-icon">⚖</div>
+        <div class="kzc-title">16 JAHRE</div>
+        <div class="kzc-sub">Mindestalter (OOC)</div>
+      </div>
+      <div class="kz-req-chip">
+        <div class="kzc-icon">📋</div>
+        <div class="kzc-title">STRAFFREI</div>
+        <div class="kzc-sub">Sauberes Strafregister</div>
+      </div>
+      <div class="kz-req-chip">
+        <div class="kzc-icon">🎖</div>
+        <div class="kzc-title">MILITÄR ZERTIFIKAT</div>
+        <div class="kzc-sub">Gültiger Nachweis</div>
+      </div>
+      <div class="kz-req-chip">
+        <div class="kzc-icon">🏥</div>
+        <div class="kzc-title">ÄRZ. GUTACHTEN</div>
+        <div class="kzc-sub">Gesundheitliche Eignung</div>
+      </div>
     </div>
-    <div class="kz-g">
-      <div class="kz-card"><div class="kt2">⚖ KERNWERTE</div><ul>
-        <li>Integrität in jedem Einsatz</li><li>Transparenz gegenüber Führung</li>
-        <li>Respekt gegenüber allen</li><li>Teamarbeit vor Einzelleistung</li>
-        <li>Konsequenz bei Regelverstößen</li>
+
+    <!-- AUFSTIEGSSYSTEM -->
+    <div class="sec-head"><span class="sec-num">// 03</span><h3>Aufstiegs<span>system</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-aufstieg">
+      <div class="auf-intro">Das Ausbildungssystem basiert auf <strong>Eigenverantwortung und Vertrauen</strong>. Jeder Officer ist selbst dafür zuständig, die Inhalte zu lesen, zu verstehen und sich bei der IA zur Prüfung anzumelden.</div>
+      <div class="auf-rule">📌 Prüfungen werden ohne Ausbildungsbuch absolviert — Score muss <strong>&gt;85%</strong> sein — 3x Verhaftungen pro Rang als Nachweis erforderlich</div>
+      <div class="auf-steps">
+        <div class="auf-step"><div class="auf-badge">JOP</div><div class="auf-info"><div class="auf-name">Junior Officer Prüfung</div><div class="auf-content">Struktur des LSPDs · Verhaftungsgrundlagen · Funkschulung</div></div></div>
+        <div class="auf-arrow">▾</div>
+        <div class="auf-step"><div class="auf-badge">OP</div><div class="auf-info"><div class="auf-name">Officer Prüfung</div><div class="auf-content">+ Umgang mit Anwälten · Personen- / Verkehrskontrollen</div></div></div>
+        <div class="auf-arrow">▾</div>
+        <div class="auf-step"><div class="auf-badge">LP</div><div class="auf-info"><div class="auf-name">Lieutenant Prüfung</div><div class="auf-content">+ Bibel · Beamtendienstgesetz · Strafgesetzbuch</div></div></div>
+        <div class="auf-arrow">▾</div>
+        <div class="auf-step"><div class="auf-badge">SP</div><div class="auf-info"><div class="auf-name">Sergeant Prüfung</div><div class="auf-content">+ Strafprozessordnung · Bürgerliches Gesetzbuch · Konvoi Schulung</div></div></div>
+        <div class="auf-arrow">▾</div>
+        <div class="auf-step auf-step-captain"><div class="auf-badge auf-cap">CPT</div><div class="auf-info"><div class="auf-name">Captain — Höchster PD Rang</div><div class="auf-content">Alle Prüfungen bestanden + Vorschlag durch die Leitungsebene der PD. Wer nach dem Rang bettelt, wird automatisch disqualifiziert.</div></div></div>
+      </div>
+    </div>
+
+    <!-- ZIELE -->
+    <div class="sec-head" style="margin-top:22px;"><span class="sec-num">// 04</span><h3>Ziele</h3><div class="sec-divider"></div></div>
+    <div class="kz-g" style="margin-bottom:22px;">
+      <div class="kz-card"><div class="kt2">🎯 KURZFRISTIG</div><ul>
+        <li>Stabile Führungsstruktur aufbauen</li>
+        <li>Alle Abteilungen vollständig besetzen</li>
+        <li>Ausbildungssystem aktiv einführen</li>
+        <li>Erste Prüfungsrunde durchführen</li>
       </ul></div>
-      <div class="kz-card gold"><div class="kt2">★ BEWERBUNGSVORAUSSETZUNGEN</div><ul>
-        <li>Mindestalter 16 Jahre (OOC)</li><li>Keine aktiven Sanktionen</li>
-        <li>Grundkenntnisse Serverregeln</li><li>Mikrofonpflicht im Dienst</li>
-        <li>Vorstellungsgespräch mit IA</li>
-      </ul></div>
-      <div class="kz-card red"><div class="kt2">⚠ SANKTIONEN</div><ul>
-        <li>Korruption → sofortige Entlassung</li><li>Waffenmissbrauch → Suspension</li>
-        <li>Inaktivität 7+ Tage → Rang-Down</li><li>Respektlosigkeit → Verwarnung</li>
-        <li>Info-Leak → Entlassung</li>
-      </ul></div>
-      <div class="kz-card green"><div class="kt2">↑ AUFSTIEGSSYSTEM</div><ul>
-        <li>Beförderungen durch die IA</li><li>Leistung & Aktivität bewertet</li>
-        <li>Unit-Aufnahme per Bewerbung</li><li>Ehrenrang nur per Nominierung</li>
-        <li>Management per Ausschreibung</li>
+      <div class="kz-card gold"><div class="kt2">🏆 LANGFRISTIG</div><ul>
+        <li>LSPD als #1 Staatsfraktion etablieren</li>
+        <li>Enge Zusammenarbeit mit FIB & GOV</li>
+        <li>Eigene Einsatzdoktrinen entwickeln</li>
+        <li>Benchmark für andere Fraktionen setzen</li>
       </ul></div>
     </div>
-    <div class="kz-full" style="margin-top:0;">
-      <div class="kt">LEITBILD</div>
-      <p><strong>„Wir schützen. Wir dienen. Wir führen."</strong><br>Das LSPD ist mehr als eine Fraktion – es ist eine Institution. Jeder Officer trägt diese Verantwortung vom ersten Tag als Rookie. Wir handeln nach Recht und Gesetz.</p>
+
+    <!-- UMGANG MIT MITGLIEDERN -->
+    <div class="sec-head"><span class="sec-num">// 05</span><h3>Umgang mit <span>Mitgliedern</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-full" style="margin-bottom:22px;">
+      <p>Jedes Mitglied des LSPDs wird mit <strong>Respekt und Fairness</strong> behandelt – unabhängig von Rang oder Erfahrung. Fehler werden nicht bestraft, sondern als Lernchance verstanden. Wer sich meldet, wird gehört. Wer Hilfe braucht, bekommt sie.</p>
+      <p>Gleichzeitig gilt: <strong>Professionalität ist keine Option, sondern Pflicht.</strong> Respektlosigkeit, Trotz und Ignoranz gegenüber der Struktur werden nicht toleriert. Das Miteinander bestimmt die Qualität des Departments.</p>
     </div>
+
+    <!-- GEPLANTE VERBESSERUNGEN -->
+    <div class="sec-head"><span class="sec-num">// 06</span><h3>Geplante <span>Verbesserungen</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-g" style="margin-bottom:22px;">
+      <div class="kz-card green"><div class="kt2">🔧 STRUKTUR</div><ul>
+        <li>Klare Dienstpläne & Schichtregelungen</li>
+        <li>Interne Kommunikationskanäle optimieren</li>
+        <li>Dokumentationspflicht standardisieren</li>
+        <li>Regelmäßige Führungsmeetings einführen</li>
+      </ul></div>
+      <div class="kz-card"><div class="kt2">📈 AUSBILDUNG</div><ul>
+        <li>Prüfungszyklen regelmäßig aktualisieren</li>
+        <li>Spezialisierungen für SOCOM & DB ausbauen</li>
+        <li>Mentoring-Programm für Rookies starten</li>
+        <li>Einsatzübungen & Trainingslagen planen</li>
+      </ul></div>
+    </div>
+
+    <!-- ABSCHLUSSWORT -->
+    <div class="sec-head"><span class="sec-num">// 07</span><h3>Abschluss<span>wort</span></h3><div class="sec-divider"></div></div>
+    <div class="kz-full kz-abschluss">
+      <p>Ich bewerbe mich nicht, weil ich einen Titel möchte. Ich bewerbe mich, weil ich weiß, <strong>was dieses Department braucht</strong> – und weil ich die Erfahrung, die Reife und den Willen mitbringe, es zu liefern.</p>
+      <p>Das LSPD hat das Potenzial, die stärkste staatliche Fraktion auf Majestic zu sein. Mit der richtigen Führung, dem richtigen Team und dem richtigen Mindset ist das kein Wunschdenken – <strong>das ist ein Plan.</strong></p>
+      <p style="margin-top:16px;font-style:italic;color:#c9a84c;font-size:16px;">„Wir schützen. Wir dienen. Wir führen."<br>— Enzo LaBalotelli</p>
+    </div>
+
   </div></div>
   <div class="win-resize" onmousedown="startResize(event,'win-konzept')"></div>
+</div>
+
+<!-- WIN: ORGANIGRAMM -->
+<div class="win" id="win-organigramm" style="width:740px;height:560px;top:55px;left:170px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-organigramm')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('organigramm')"></div><div class="win-dot min" onclick="minWin('organigramm')"></div><div class="win-dot max" onclick="maxWin('organigramm')"></div></div>
+    <div class="win-title">ORGANIGRAMM — LSPD</div><div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div class="sec-head"><span class="sec-num">// ORG</span><h3>Organi<span>gramm</span></h3><div class="sec-divider"></div></div>
+    <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#4466aa;letter-spacing:2px;margin-bottom:20px;">FÜHRUNGSPOSITIONEN WERDEN NACH BESETZUNG EINGETRAGEN</p>
+
+    <!-- LEITUNGSEBENE -->
+    <div class="org-level">
+      <div class="org-level-label leit">LEITUNGSEBENE</div>
+      <div class="org-row" style="justify-content:center;">
+        <div class="org-node chief">
+          <div class="org-rank">Chief of Police</div>
+          <div class="org-tag">LEADER</div>
+          <div class="org-name" id="org-cop">— vakant —</div>
+        </div>
+      </div>
+      <div class="org-connector-down"></div>
+      <div class="org-row" style="justify-content:center;">
+        <div class="org-node co">
+          <div class="org-rank">Assistant Chief of Police</div>
+          <div class="org-tag">CO-LEADER</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+      </div>
+      <div class="org-connector-down"></div>
+      <div class="org-row" style="justify-content:center;">
+        <div class="org-node curator">
+          <div class="org-rank">Division Commander</div>
+          <div class="org-tag">UNIT CURATOR</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANAGEMENT -->
+    <div class="org-level" style="margin-top:24px;">
+      <div class="org-level-label mgmt">MANAGEMENT</div>
+      <div class="org-connector-h3"></div>
+      <div class="org-row">
+        <div class="org-node mgmt-node">
+          <div class="org-rank">Supervisor</div>
+          <div class="org-tag" style="color:#6699ee;border-color:#2244aa;">UNIT LEADER</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node mgmt-node">
+          <div class="org-rank">Deputy Supervisor</div>
+          <div class="org-tag" style="color:#6699ee;border-color:#2244aa;">UNIT CO-LEADER</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node mgmt-node">
+          <div class="org-rank">Administrative Officer</div>
+          <div class="org-tag" style="color:#ff7777;border-color:#882222;">IA MITGLIED</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNGEN -->
+    <div class="org-level" style="margin-top:24px;">
+      <div class="org-level-label mid">ABTEILUNGSLEITER</div>
+      <div class="org-row">
+        <div class="org-node dept-node" style="border-color:#ff5555;">
+          <div class="org-rank" style="color:#ff7777;">IA</div>
+          <div class="org-tag" style="color:#ff7777;border-color:#882222;">INTERNAL ADMIN</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node dept-node" style="border-color:#2255ee;">
+          <div class="org-rank" style="color:#6699ff;">PD</div>
+          <div class="org-tag" style="color:#6699ff;border-color:#2244aa;">PATROL DIVISION</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node dept-node" style="border-color:#8822ee;">
+          <div class="org-rank" style="color:#cc77ff;">SOCOM</div>
+          <div class="org-tag" style="color:#cc77ff;border-color:#663388;">SPEC. OPS</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+        <div class="org-node dept-node" style="border-color:#11aa66;">
+          <div class="org-rank" style="color:#44ddaa;">DB</div>
+          <div class="org-tag" style="color:#44ddaa;border-color:#226644;">DETECTIVE BUREAU</div>
+          <div class="org-name">— vakant —</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:12px 16px;background:#091420;border:1px solid #1a3366;font-family:'Share Tech Mono',monospace;font-size:10px;color:#334466;letter-spacing:2px;line-height:1.8;">
+      ℹ️ NAMES WERDEN NACH BESETZUNG DER POSITIONEN EINGETRAGEN — STAND: 19.04.2026
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-organigramm')"></div>
+</div>
+
+<!-- WIN: AKTE -->
+<div class="win" id="win-akte" style="width:620px;height:500px;top:65px;left:180px;">
+  <div class="win-titlebar" onmousedown="startDrag(event,'win-akte')">
+    <div class="win-dots"><div class="win-dot close" onclick="closeWin('akte')"></div><div class="win-dot min" onclick="minWin('akte')"></div><div class="win-dot max" onclick="maxWin('akte')"></div></div>
+    <div class="win-title">PERSONALAKTE — LABALOTELLI, ENZO</div><div style="width:46px;"></div>
+  </div>
+  <div class="win-body"><div class="win-pad">
+    <div style="display:flex;gap:24px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #152030;">
+      <!-- FOTO -->
+      <div id="akte-foto-box" style="width:110px;height:130px;background:#091420;border:2px dashed #2244aa;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;position:relative;overflow:hidden;" onclick="document.getElementById('foto-input').click()" title="Foto hochladen">
+        <img id="akte-foto" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="13" r="5" stroke="#2244aa" stroke-width="1.5"/><path d="M4 26c0-6 5-10 12-10s12 4 12 10" stroke="#2244aa" stroke-width="1.5" fill="none"/></svg>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:8px;color:#2244aa;letter-spacing:1px;text-align:center;">FOTO<br>HOCHLADEN</span>
+      </div>
+      <input type="file" id="foto-input" accept="image/*" style="display:none;" onchange="loadFoto(event)">
+      <!-- BASISDATEN -->
+      <div style="flex:1;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#ffffff;letter-spacing:2px;line-height:1;">Enzo <span style="color:#c9a84c;">LaBalotelli</span></div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#4466aa;letter-spacing:3px;margin-top:4px;margin-bottom:16px;">CHIEF OF POLICE — BEWERBER</div>
+        <div class="akte-grid">
+          <div class="akte-row"><span class="akte-lbl">SPIELER-ID</span><span class="akte-val">#10386</span></div>
+          <div class="akte-row"><span class="akte-lbl">DISCORD</span><span class="akte-val">Goatonelli</span></div>
+          <div class="akte-row"><span class="akte-lbl">AKTIV SEIT</span><span class="akte-val">04.02.2023</span></div>
+          <div class="akte-row"><span class="akte-lbl">STATUS</span><span class="akte-val" style="color:#22dd66;">● AKTIV</span></div>
+          <div class="akte-row"><span class="akte-lbl">STRAFREGISTER</span><span class="akte-val" style="color:#22dd66;">● LEER</span></div>
+          <div class="akte-row"><span class="akte-lbl">SERVER</span><span class="akte-val">MAJESTIC RP DE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEMPEL -->
+    <div style="display:flex;gap:12px;margin-bottom:20px;">
+      <div class="akte-stamp stamp-green">✓ STRAFFREI</div>
+      <div class="akte-stamp stamp-blue">✓ MILITÄR ZERT.</div>
+      <div class="akte-stamp stamp-blue">✓ ÄRZ. GUTACHTEN</div>
+      <div class="akte-stamp stamp-gold">16+ JAHRE</div>
+    </div>
+
+    <!-- NOTIZEN -->
+    <div class="sec-head"><span class="sec-num">// AK</span><h3>Dienst<span>notizen</span></h3><div class="sec-divider"></div></div>
+    <div style="background:#091420;border:1px solid #1a3366;padding:16px 18px;">
+      <div class="akte-notiz">▸ Über 3 Jahre aktive Dienstzeit auf Majestic Roleplay DE</div>
+      <div class="akte-notiz">▸ Ehemaliger SWAT Commander & IAD Deputy Commander (LSPD)</div>
+      <div class="akte-notiz">▸ Erfahrung in 5 staatlichen Behörden (LSPD, LSCSD, FIB, GOV, SANG)</div>
+      <div class="akte-notiz">▸ Ehemaliger freier Anwalt — Kenntnisse im Rechtssystem</div>
+      <div class="akte-notiz">▸ Bewerbung eingereicht am 19.04.2026 für die Position: Chief of Police</div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;justify-content:flex-end;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#223355;letter-spacing:2px;text-align:right;line-height:2;">
+        AKTE NR. LSPD-2026-001<br>ERSTELLT: 19.04.2026 · KLASSIFIZIERUNG: INTERN
+      </div>
+    </div>
+  </div></div>
+  <div class="win-resize" onmousedown="startResize(event,'win-akte')"></div>
 </div>
 ```
 
@@ -591,7 +895,19 @@ white-space: nowrap; border-radius: 3px; transition: all .2s;
       <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1"/></svg>
       KONZEPT
     </button>
+    <button class="tb-btn" id="tb-organigramm" onclick="toggleWin('organigramm')">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="5" y="1" width="4" height="3" rx=".5" stroke="currentColor" stroke-width=".9"/><rect x="1" y="6" width="4" height="3" rx=".5" stroke="currentColor" stroke-width=".9"/><rect x="5" y="6" width="4" height="3" rx=".5" stroke="currentColor" stroke-width=".9"/><rect x="9" y="6" width="4" height="3" rx=".5" stroke="currentColor" stroke-width=".9"/><line x1="7" y1="4" x2="7" y2="5" stroke="currentColor" stroke-width=".9"/><line x1="3" y1="5" x2="11" y2="5" stroke="currentColor" stroke-width=".9"/><line x1="3" y1="5" x2="3" y2="6" stroke="currentColor" stroke-width=".9"/><line x1="7" y1="5" x2="7" y2="6" stroke="currentColor" stroke-width=".9"/><line x1="11" y1="5" x2="11" y2="6" stroke="currentColor" stroke-width=".9"/></svg>
+      ORGANIGRAMM
+    </button>
+    <button class="tb-btn" id="tb-akte" onclick="toggleWin('akte')">
+      <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1" stroke="currentColor" stroke-width=".9"/><rect x="4" y="3" width="4" height="4" rx=".5" stroke="currentColor" stroke-width=".8"/><line x1="9" y1="4" x2="11" y2="4" stroke="currentColor" stroke-width=".8"/><line x1="9" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width=".8"/><line x1="4" y1="9" x2="10" y2="9" stroke="currentColor" stroke-width=".8"/><line x1="4" y1="11" x2="8" y2="11" stroke="currentColor" stroke-width=".8"/></svg>
+      AKTE
+    </button>
     <div class="tb-spacer"></div>
+    <button class="tb-btn" id="sound-btn" onclick="toggleSound()" title="Ambient Sound">
+      <svg id="sound-icon" viewBox="0 0 14 14" fill="none"><path d="M2 5h2l3-3v10l-3-3H2V5z" stroke="currentColor" stroke-width=".9" fill="none"/><path d="M9 4c1 .8 1.5 1.8 1.5 3s-.5 2.2-1.5 3" stroke="currentColor" stroke-width=".9"/><path d="M10.5 2.5c1.5 1.2 2.2 2.7 2.2 4.5s-.7 3.3-2.2 4.5" stroke="currentColor" stroke-width=".9"/></svg>
+      SOUND
+    </button>
     <div class="tb-sys">
       <span class="status-dot"></span>
       <span>E.LABALOTELLI</span>
@@ -680,7 +996,7 @@ function doLogin(){
 }
 
 // WINDOWS
-const winState={bewerbung:false,rangsystem:false,abteilungen:false,konzept:false};
+const winState={bewerbung:false,rangsystem:false,abteilungen:false,konzept:false,organigramm:false,akte:false};
 let topZ=10;
 function openWin(n){const w=document.getElementById('win-'+n);w.classList.add('open');winState[n]=true;bringToFront(n);document.getElementById('tb-'+n).classList.add('active');closeCtx();}
 function closeWin(n){document.getElementById('win-'+n).classList.remove('open');winState[n]=false;document.getElementById('tb-'+n).classList.remove('active');}
@@ -692,9 +1008,9 @@ function maxWin(n){
 }
 function toggleWin(n){winState[n]?closeWin(n):openWin(n);}
 function bringToFront(n){document.getElementById('win-'+n).style.zIndex=++topZ;}
-function openAllWins(){['bewerbung','rangsystem','abteilungen','konzept'].forEach((n,i)=>setTimeout(()=>openWin(n),i*70));}
-function closeAllWins(){['bewerbung','rangsystem','abteilungen','konzept'].forEach(n=>closeWin(n));}
-['bewerbung','rangsystem','abteilungen','konzept'].forEach(n=>{document.getElementById('win-'+n).addEventListener('mousedown',()=>bringToFront(n));});
+function openAllWins(){['bewerbung','rangsystem','abteilungen','konzept','organigramm','akte'].forEach((n,i)=>setTimeout(()=>openWin(n),i*70));}
+function closeAllWins(){['bewerbung','rangsystem','abteilungen','konzept','organigramm','akte'].forEach(n=>closeWin(n));}
+['bewerbung','rangsystem','abteilungen','konzept','organigramm','akte'].forEach(n=>{document.getElementById('win-'+n).addEventListener('mousedown',()=>bringToFront(n));});
 
 // DRAG
 function startDrag(e,id){
