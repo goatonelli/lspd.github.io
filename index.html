@@ -9,12 +9,15 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; scrollbar-width: none; }
 *::-webkit-scrollbar { display: none; }
-html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1020; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1020; max-width: 100vw; }
 /* Re-enable vertical scrollbar only for win-body */
 .win-body { scrollbar-width: thin; scrollbar-color: #1a3060 #091420; }
 .win-body::-webkit-scrollbar { display: block; width: 4px; }
 .win-body::-webkit-scrollbar-track { background: #091420; }
 .win-body::-webkit-scrollbar-thumb { background: #1a3060; border-radius: 2px; }
+
+/* Force desktop to never overflow */
+#desktop, .taskbar, .topbar, .desktop-area { max-width: 100vw; overflow-x: hidden; }
 
 /* ===== BOOT ===== */
 #boot {
@@ -127,32 +130,29 @@ cursor: move; flex-shrink: 0; border-radius: 4px 4px 0 0;
 .win-dot:hover { filter: brightness(1.2); }
 .win-title { font-family: ‘Share Tech Mono’, monospace; font-size: 11px; color: #5577aa; letter-spacing: 3px; flex: 1; text-align: center; }
 .win-body { flex: 1; overflow-y: auto; overflow-x: hidden; }
-.win-body::-webkit-scrollbar { width: 4px; }
-.win-body::-webkit-scrollbar-track { background: #091420; }
-.win-body::-webkit-scrollbar-thumb { background: #1a3060; border-radius: 2px; }
 .win-resize { position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; cursor: se-resize; }
 .win-resize::before { content: ‘’; position: absolute; bottom: 4px; right: 4px; width: 7px; height: 7px; border-right: 2px solid #3355aa; border-bottom: 2px solid #3355aa; }
-/* Hide boot bar after boot */
 #boot { overflow: hidden; }
 
 /* TASKBAR */
 .taskbar {
 position: relative; z-index: 200; height: 50px;
 background: #070f1e; border-top: 1px solid #1e3a7a;
-display: flex; align-items: center; padding: 0 12px; gap: 6px; flex-shrink: 0;
-overflow: hidden; /* prevent any scrollbar from appearing */
+display: flex; align-items: center; padding: 0 8px; gap: 4px; flex-shrink: 0;
+overflow: hidden; width: 100%;
 }
 .tb-btn {
-height: 36px; padding: 0 12px; background: #111e33; border: 1px solid #1e3a7a;
+height: 34px; padding: 0 10px; background: #111e33; border: 1px solid #1e3a7a;
 color: #6688bb; font-family: ‘Share Tech Mono’, monospace; font-size: 9px;
-letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 5px;
 white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
+min-width: 0;
 }
 .tb-btn:hover { background: #162840; color: #aaccff; border-color: #2255cc; }
 .tb-btn.active { background: #1a3050; border-color: #3366dd; color: #ffffff; }
-.tb-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-.tb-spacer { flex: 1; }
-.tb-sys { display: flex; align-items: center; gap: 12px; font-family: ‘Share Tech Mono’, monospace; font-size: 10px; color: #4d6a99; letter-spacing: 2px; }
+.tb-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+.tb-spacer { flex: 1; min-width: 4px; }
+.tb-sys { display: flex; align-items: center; gap: 8px; font-family: ‘Share Tech Mono’, monospace; font-size: 9px; color: #4d6a99; letter-spacing: 1px; white-space: nowrap; }
 
 /* ===== WINDOW CONTENT ===== */
 .win-pad { padding: 28px 32px; }
@@ -242,19 +242,19 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
 .dept-card.le::before { background: #c9a84c; }
 .dept-card.pd::before { background: #2255ee; }
 .dept-card.ia::before { background: #dd2222; }
-.dept-card.socom::before { background: #8822ee; }
+.dept-card.swat::before { background: #8822ee; }
 .dept-card.db::before { background: #11aa66; }
 .dept-abbr { font-family: ‘Bebas Neue’, sans-serif; font-size: 34px; letter-spacing: 3px; line-height: 1; margin-bottom: 3px; }
 .dept-card.le .dept-abbr { color: #f0c060; }
 .dept-card.pd .dept-abbr { color: #6699ff; }
 .dept-card.ia .dept-abbr { color: #ff5555; }
-.dept-card.socom .dept-abbr { color: #cc77ff; }
+.dept-card.swat .dept-abbr { color: #cc77ff; }
 .dept-card.db .dept-abbr { color: #44ddaa; }
 .dept-fullname { font-family: ‘Share Tech Mono’, monospace; font-size: 10px; letter-spacing: 3px; margin-bottom: 12px; }
 .dept-card.le .dept-fullname { color: #886622; }
 .dept-card.pd .dept-fullname { color: #334488; }
 .dept-card.ia .dept-fullname { color: #882222; }
-.dept-card.socom .dept-fullname { color: #662288; }
+.dept-card.swat .dept-fullname { color: #662288; }
 .dept-card.db .dept-fullname { color: #226644; }
 .dept-desc { font-family: ‘Rajdhani’, sans-serif; font-size: 14px; line-height: 1.7; color: #8899bb; }
 
@@ -586,7 +586,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
       <div class="rk-row"><span class="rk-num">08</span><span class="rk-name">Officer of Honor</span><span class="rk-tag tag-honor">EHRENRANG</span></div>
       <div class="rk-row"><span class="rk-num">09</span><span class="rk-name">Captain</span><span class="rk-tag tag-default">PATROL DIVISION</span></div>
       <div class="rk-row"><span class="rk-num">10</span><span class="rk-name">Detective</span><span class="rk-tag tag-special">DB MITGLIED</span></div>
-      <div class="rk-row"><span class="rk-num">11</span><span class="rk-name">Special Operations Officer</span><span class="rk-tag tag-special">SOCOM MITGLIED</span></div>
+      <div class="rk-row"><span class="rk-num">11</span><span class="rk-name">SWAT Officer</span><span class="rk-tag tag-special">SWAT MITGLIED</span></div>
       <div class="rk-row"><span class="rk-num">12</span><span class="rk-name">Lieutenant</span><span class="rk-tag tag-default">PATROL</span></div>
       <div class="rk-row"><span class="rk-num">13</span><span class="rk-name">Sergeant</span><span class="rk-tag tag-default">PATROL</span></div>
       <div class="rk-row"><span class="rk-num">14</span><span class="rk-name">Administrative Trainee</span><span class="rk-tag tag-ia">ADMIN TRAINEE</span></div>
@@ -616,7 +616,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
       <div class="dept-card le"><div class="dept-abbr">LE</div><div class="dept-fullname">LEITUNGSEBENE</div><div class="dept-desc">Die Leitungsebene setzt sich aus Personen zusammen, welche den Rang Division Commander begleiten. Ein reibungsloser Ablauf aller Units wird garantiert.</div></div>
       <div class="dept-card pd"><div class="dept-abbr">PD</div><div class="dept-fullname">PATROL DIVISION</div><div class="dept-desc">Die Patrol Division ist das Grundfundament des LSPDs. Jeder neue Officer beginnt hier seine Reise und kann sich bis an die Spitze arbeiten.</div></div>
       <div class="dept-card ia"><div class="dept-abbr">IA</div><div class="dept-fullname">INTERNAL ADMINISTRATION</div><div class="dept-desc">Die interne Personalabteilung – zuständig für Einstellungen, Kündigungen und Sanktionen. Dein Ansprechpartner für alles rund ums Personal.</div></div>
-      <div class="dept-card socom"><div class="dept-abbr">SOCOM</div><div class="dept-fullname">SPECIAL OPERATIONS COMMAND</div><div class="dept-desc">Die Spezialeinheit des LSPDs – zuständig für Hochrisiko-Einsätze wie Bankraube, Geiselnahmen und koordinierte Operationen.</div></div>
+      <div class="dept-card swat"><div class="dept-abbr">SWAT</div><div class="dept-fullname">SPECIAL WEAPONS AND TACTICS</div><div class="dept-desc">Die SWAT Unit ist die Spezialeinheit des LSPDs – zuständig für Hochrisiko-Einsätze wie Bankraube, Geiselnahmen, Geiselbefreiungen und koordinierte taktische Operationen.</div></div>
       <div class="dept-card db" style="grid-column:1/-1;"><div class="dept-abbr">DB</div><div class="dept-fullname">DETECTIVE BUREAU</div><div class="dept-desc">Das Detective Bureau führt verdeckten Zivildienst durch, gewinnt Informationen über illegale Gruppierungen und koordiniert Operationen gegen kriminelle Fraktionen.</div></div>
     </div>
   </div></div>
@@ -715,7 +715,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
       </ul></div>
       <div class="kz-card"><div class="kt2">📈 AUSBILDUNG</div><ul>
         <li>Prüfungszyklen regelmäßig aktualisieren</li>
-        <li>Spezialisierungen für SOCOM & DB ausbauen</li>
+        <li>Spezialisierungen für SWAT & DB ausbauen</li>
         <li>Mentoring-Programm für Rookies starten</li>
         <li>Einsatzübungen & Trainingslagen planen</li>
       </ul></div>
@@ -761,7 +761,7 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
       <line x1="80" y1="175" x2="180" y2="175" stroke="#2244aa" stroke-width="1"/>
       <line x1="80" y1="175" x2="80" y2="195" stroke="#2244aa" stroke-width="1"/>
       <line x1="180" y1="175" x2="180" y2="195" stroke="#2244aa" stroke-width="1"/>
-      <!-- Middle AC → SOCOM -->
+      <!-- Middle AC → SWAT -->
       <line x1="380" y1="153" x2="380" y2="195" stroke="#2244aa" stroke-width="1"/>
       <!-- Right AC → DB -->
       <line x1="630" y1="153" x2="630" y2="195" stroke="#2244aa" stroke-width="1"/>
@@ -813,10 +813,10 @@ white-space: nowrap; border-radius: 3px; transition: all .2s; flex-shrink: 0;
       <text x="180" y="221" text-anchor="middle" font-size="8" fill="#2244aa" letter-spacing="2">PD</text>
       <text x="180" y="230" text-anchor="middle" font-size="8" fill="#8899aa" font-family="Rajdhani,sans-serif">— vakant —</text>
 
-      <!-- SOCOM -->
-      <rect x="330" y="195" width="100" height="38" rx="2" fill="#0d1a2e" stroke="#8822ee" stroke-width="1.2"/>
-      <text x="380" y="209" text-anchor="middle" font-size="9" fill="#cc77ff" font-family="Bebas Neue,sans-serif" letter-spacing="1">Div. Commander</text>
-      <text x="380" y="221" text-anchor="middle" font-size="8" fill="#663388" letter-spacing="2">SOCOM</text>
+      <!-- SWAT -->
+      <rect x="330" y="195" width="100" height="38" rx="2" fill="#0d1a2e" stroke="#1a5fff" stroke-width="1.2"/>
+      <text x="380" y="209" text-anchor="middle" font-size="9" fill="#4488ff" font-family="Bebas Neue,sans-serif" letter-spacing="1">Div. Commander</text>
+      <text x="380" y="221" text-anchor="middle" font-size="8" fill="#663388" letter-spacing="2">SWAT</text>
       <text x="380" y="230" text-anchor="middle" font-size="8" fill="#8899aa" font-family="Rajdhani,sans-serif">— vakant —</text>
 
       <!-- DB -->
